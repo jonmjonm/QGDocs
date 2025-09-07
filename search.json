@@ -1,19 +1,5 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Quantifying Gerrymandering Documentation",
-    "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
-  },
-  {
     "objectID": "geographic.html",
     "href": "geographic.html",
     "title": "Geographic Files",
@@ -56,5 +42,63 @@
       "Home",
       "Geographic Files"
     ]
+  },
+  {
+    "objectID": "cycleWalk.html",
+    "href": "cycleWalk.html",
+    "title": "Cycle Walk",
+    "section": "",
+    "text": "CycleWalk.jl is a registered Julia package that implements the Metropolized Cycle Walk algorithm which is used to sample a used specified distribution on the space of political redistricting plans. This MCMC algorithm is used to create ensemble of redistricting plans that can be used to analyze the impact of different redistricting plans on electoral outcomes.\nMetropolized Cycle Walk supports number of different score/energy functions which are used to define the distribution. The distribution encodes the legal and policy preferences.\nMetropolized Cycle Walk outputs the sampled redistricting into an Atlas file. AtlasIO files can be loaded using Julia or Python using the AtlasIO.jl library.",
+    "crumbs": [
+      "Home",
+      "Cycle Walk"
+    ]
+  },
+  {
+    "objectID": "cycleWalk.html#overview",
+    "href": "cycleWalk.html#overview",
+    "title": "Cycle Walk",
+    "section": "",
+    "text": "CycleWalk.jl is a registered Julia package that implements the Metropolized Cycle Walk algorithm which is used to sample a used specified distribution on the space of political redistricting plans. This MCMC algorithm is used to create ensemble of redistricting plans that can be used to analyze the impact of different redistricting plans on electoral outcomes.\nMetropolized Cycle Walk supports number of different score/energy functions which are used to define the distribution. The distribution encodes the legal and policy preferences.\nMetropolized Cycle Walk outputs the sampled redistricting into an Atlas file. AtlasIO files can be loaded using Julia or Python using the AtlasIO.jl library.",
+    "crumbs": [
+      "Home",
+      "Cycle Walk"
+    ]
+  },
+  {
+    "objectID": "cycleWalk.html#the-metropolized-cycle-walk-algorithm",
+    "href": "cycleWalk.html#the-metropolized-cycle-walk-algorithm",
+    "title": "Cycle Walk",
+    "section": "The Metropolized Cycle Walk Algorithm",
+    "text": "The Metropolized Cycle Walk Algorithm\nThe basic Cycle Walk produced \\(d\\)-tree spanning forests where each of the \\(d\\)-spanning trees is approximately balanced in the sense that the total population of each tree is approximately balanced.\nOne step of the Cycle Walk proceeds by either proposing a 1-Tree Cycle Walk or a 2-Tree Cycle Walk. The 1-Tree Cycle Walk adds an edge the tree and then removes and edge from cycle this addition creates so that one again has a tree. The 2-Tree Cycle Walk adds two edges between two adjacent trees and then removes two edges from the cycle these additions creates so that one again has two trees.\nThe Metropolized Cycle Walk algorithm uses these walks as proposals to a Metropolis-Hastings algorithm to sample from a specified target distribution.\nMore details on the algorithm can be found in the [Cycle Walk paper].",
+    "crumbs": [
+      "Home",
+      "Cycle Walk"
+    ]
+  },
+  {
+    "objectID": "cycleWalk.html#instillation",
+    "href": "cycleWalk.html#instillation",
+    "title": "Cycle Walk",
+    "section": "Instillation",
+    "text": "Instillation\nThe latest released version of the `CycleWalk.jl’ package can be installed from with in Julia by\n```{julia}\nusing Pkg\nPkg.add(\"CycleWalk\")\n```",
+    "crumbs": [
+      "Home",
+      "Cycle Walk"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Quantifying Gerrymandering Documentation",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
   }
 ]
