@@ -200,7 +200,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#json-adjacency-files" id="toc-json-adjacency-files" class="nav-link active" data-scroll-target="#json-adjacency-files">JSON Adjacency Files</a></li>
+  <li><a href="#json-adjacency-files" id="toc-json-adjacency-files" class="nav-link active" data-scroll-target="#json-adjacency-files">JSON Adjacency Files</a>
+  <ul class="collapse">
+  <li><a href="#example-files" id="toc-example-files" class="nav-link" data-scroll-target="#example-files">Example files</a></li>
+  </ul></li>
   <li><a href="#shapefiles" id="toc-shapefiles" class="nav-link" data-scroll-target="#shapefiles">Shapefiles</a></li>
   <li><a href="#geojson" id="toc-geojson" class="nav-link" data-scroll-target="#geojson">GeoJSON</a></li>
   </ul>
@@ -231,18 +234,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="json-adjacency-files" class="level2">
 <h2 class="anchored" data-anchor-id="json-adjacency-files">JSON Adjacency Files</h2>
 <p>These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here <a href="Geo/Adjacency/grid_graph_4_by_4.json">grid_graph_4_by_4.json</a>.</p>
-<p>Such a file contains list of the nodes/vertices as a list under ‘node’. A sample node entry is</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        "node_name": "(0,0)",</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        "id": 0,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        "border_length": 2,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        "x_location": 0,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        "y_location": 0,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        "area": 1,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        "population": 1,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        "county": "A"</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>where the <code>id</code>, <code>area</code>, <code>population</code> and <code>border_length</code> are required. They give the name by which the vertex/node are referred to as well as the <code>area</code> and <code>population</code> of the partition unit associated to the vertex/node.</p>
+<p>Such a file contains list of the nodes/vertices as a list under <code>node</code>. A sample node entry is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"node_name"</span><span class="fu">:</span> <span class="st">"(0,0)"</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"border_length"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x_location"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y_location"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"area"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"population"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"county"</span><span class="fu">:</span> <span class="st">"A"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>where the <code>id</code>, <code>area</code>, <code>population</code> and <code>border_length</code> are required. They give the name by which the vertex/node are referred to as well as the <code>area</code> and <code>population</code> of the partition unit associated to the vertex/node. <code>border_length</code> entry give the length of the external boundary of the partition unit associated to the vertex/node. Hence of a vertex/node is interior this number is zero. The precise labels can be different than these as the name mapping to each piece of data can be specified at runtime.</p>
+<p>One can also encode additional information. This example gives a node name in <code>node_name</code>, a location in the plane to help with plotting in <code>x_location</code> and <code>y_location</code>. It also records which county the node is in. This example uses fictitious county names of “A” and “B”. Additionally, the vote count for each party in a collection of elections is also often included.</p>
+<p>After the list of noted, there is an <code>adjacency</code> entry which contains one list for each of the vertices/nodes. The first list under <code>adjacency</code> gives the vertices/nodes that are adjacent to the first vertex/node listed above.</p>
+<p>For example of the second entry in the adjacency list is the following list, then the 2nd note is adjacent to the 4th and 5th node listed with a boundary whose length is respectively one and two units.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="er">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"length"</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="er">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"length"</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="example-files" class="level3">
+<h3 class="anchored" data-anchor-id="example-files">Example files</h3>
+<table class="caption-top table">
+<caption>Collection of Sample Adjacency Files</caption>
+<thead>
+<tr class="header">
+<th>Description</th>
+<th style="text-align: left;">File Name</th>
+<th style="text-align: right;">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>12</td>
+<td style="text-align: left;"><a href="Geo/Adjacency/grid_graph_8_by_8.json">grid_graph_8_by_8.json</a></td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td>123</td>
+<td style="text-align: left;"><a href="Geo/Adjacency/grid_graph_10_by_10.json">grid_graph_10_by_10.json</a></td>
+<td style="text-align: right;">123</td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td style="text-align: left;"><a href="Geo/Adjacency/hex_graph_10_by_10.json">Geo/Adjacency/hex_graph_10_by_10.json</a></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td></td>
+<td style="text-align: left;"><a href="Geo/Adjacency/CT_pct20.json">CT_pct20.json</a></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="shapefiles" class="level2">
 <h2 class="anchored" data-anchor-id="shapefiles">Shapefiles</h2>
