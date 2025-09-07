@@ -1,0 +1,28 @@
+---
+title: "Geographic Files"
+format: html
+---
+## JSON Adjacency Files
+
+These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here [grid_graph_4_by_4.json](Geo/Adjacency/grid_graph_4_by_4.json). 
+
+Such a file contains  list of the nodes/vertices as a list under 'node'. A sample node entry is
+```default
+    {
+        "node_name": "(0,0)",
+        "id": 0,
+        "border_length": 2,
+        "x_location": 0,
+        "y_location": 0,
+        "area": 1,
+        "population": 1,
+        "county": "A"
+    }
+```
+where the `id`, `area`, `population` and `border_length` are required. They give the name by which the vertex/node are referred to as well as the `area` and `population` of the partition unit associated to the vertex/node. 
+
+
+
+## Shapefiles
+
+## GeoJSON

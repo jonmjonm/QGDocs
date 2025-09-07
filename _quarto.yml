@@ -7,7 +7,19 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: geographic.qmd
+        text: Geographic Files
+      - href: cycleWalk.qmd
       - about.qmd
+  sidebar: 
+    style: "docked"
+    search: true
+    depth: 2
+    contents:
+      - text: Geographic Files
+        href: geographic.qmd  
+      - text: "Cycle Walk"
+        href: cycleWalk.qmd
 
 format:
   html:
