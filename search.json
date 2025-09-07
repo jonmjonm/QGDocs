@@ -12,5 +12,49 @@
     "title": "Quantifying Gerrymandering Documentation",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "geographic.html",
+    "href": "geographic.html",
+    "title": "Geographic Files",
+    "section": "",
+    "text": "These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here grid_graph_4_by_4.json.\nSuch a file contains list of the nodes/vertices as a list under ‘node’. A sample node entry is\n    {\n        \"node_name\": \"(0,0)\",\n        \"id\": 0,\n        \"border_length\": 2,\n        \"x_location\": 0,\n        \"y_location\": 0,\n        \"area\": 1,\n        \"population\": 1,\n        \"county\": \"A\"\n    }\nwhere the id, area, population and border_length are required. They give the name by which the vertex/node are referred to as well as the area and population of the partition unit associated to the vertex/node.",
+    "crumbs": [
+      "Home",
+      "Geographic Files"
+    ]
+  },
+  {
+    "objectID": "geographic.html#json-adjacency-files",
+    "href": "geographic.html#json-adjacency-files",
+    "title": "Geographic Files",
+    "section": "",
+    "text": "These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here grid_graph_4_by_4.json.\nSuch a file contains list of the nodes/vertices as a list under ‘node’. A sample node entry is\n    {\n        \"node_name\": \"(0,0)\",\n        \"id\": 0,\n        \"border_length\": 2,\n        \"x_location\": 0,\n        \"y_location\": 0,\n        \"area\": 1,\n        \"population\": 1,\n        \"county\": \"A\"\n    }\nwhere the id, area, population and border_length are required. They give the name by which the vertex/node are referred to as well as the area and population of the partition unit associated to the vertex/node.",
+    "crumbs": [
+      "Home",
+      "Geographic Files"
+    ]
+  },
+  {
+    "objectID": "geographic.html#shapefiles",
+    "href": "geographic.html#shapefiles",
+    "title": "Geographic Files",
+    "section": "Shapefiles",
+    "text": "Shapefiles",
+    "crumbs": [
+      "Home",
+      "Geographic Files"
+    ]
+  },
+  {
+    "objectID": "geographic.html#geojson",
+    "href": "geographic.html#geojson",
+    "title": "Geographic Files",
+    "section": "GeoJSON",
+    "text": "GeoJSON",
+    "crumbs": [
+      "Home",
+      "Geographic Files"
+    ]
   }
 ]
