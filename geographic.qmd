@@ -2,7 +2,7 @@
 title: "Geographic Files"
 format: html
 ---
-## JSON Adjacency Files
+## JSON Adjacency Files {#sec-json-adjacency-files}
 
 These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here [grid_graph_4_by_4.json](Geo/Adjacency/grid_graph_4_by_4.json). 
 

@@ -10,6 +10,8 @@ website:
       - href: geographic.qmd
         text: Geographic Files
       - href: cycleWalk.qmd
+      - href: atlasIO.qmd
+        text: Atlas Files
       - about.qmd
   sidebar: 
     style: "docked"
@@ -20,6 +22,8 @@ website:
         href: geographic.qmd  
       - text: "Cycle Walk"
         href: cycleWalk.qmd
+      - text: "Atlas Files"
+        href: atlasIO.qmd      
 
 format:
   html:

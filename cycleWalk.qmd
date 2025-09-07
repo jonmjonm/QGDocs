@@ -2,5 +2,101 @@
 title: "Cycle Walk"
 format: html
 engine: julia
----
 
+---
+## Overview
+
+CycleWalk.jl is a registered Julia package that implements the Metropolized Cycle Walk algorithm which is used to sample a used specified distribution on the space of political redistricting plans. This MCMC algorithm is used to create ensemble of redistricting plans that can be used to analyze the impact of different redistricting plans on electoral outcomes.
+
+Metropolized Cycle Walk supports number of different score/energy functions which are used to define the distribution. The distribution encodes the legal and policy preferences.
+
+Metropolized Cycle Walk outputs the sampled redistricting into an Atlas file. AtlasIO files can be loaded using Julia or Python using the AtlasIO.jl library.
+
+## The Metropolized Cycle Walk Algorithm
+The basic Cycle Walk produced 
+$d$-tree spanning forests where each of the 
+$d$-spanning trees is approximately balanced in the sense that the total population of each tree is approximately balanced.
+
+One step of the Cycle Walk proceeds by either proposing a 1-Tree Cycle Walk or a 2-Tree Cycle Walk. The 1-Tree Cycle Walk adds an edge the tree and then removes and edge from cycle this addition creates so that one again has a tree. The 2-Tree Cycle Walk adds two edges between two adjacent trees and then removes two edges from the cycle these additions creates so that one again has two trees.
+
+The Metropolized Cycle Walk algorithm uses these walks as proposals to a Metropolis-Hastings algorithm to sample from a specified target distribution.
+
+More details on the algorithm can be found in the [Cycle Walk paper].
+
+## Instillation
+
+The latest released version of the `CycleWalk.jl' package can be installed from with in Julia by 
+
+```{.julia}
+using Pkg
+Pkg.add("CycleWalk")
+```
+
+This can be done from the commandline in a terminal with 
+```{.sh}
+julia -e 'using Pkg; Pkg.add("CycleWalk")'
+```
+
+#### Local Environments
+
+It is recommended that you run your Julia session in a local environment to minimize unanticipated side effects from other (unneeded) packages. To add the CycleWalk package to a local environment in the current working directory 
+```{.julia}
+using Pkg
+Pkg.activate(".")       # replace this path to keep the local 
+                        # environment somewhere else or with a specified name 
+Pkg.add("CycleWalk")
+```
+## Examples
+In each example, we will step through the commands task by task. At the end of the section we will collect all of the commands into a complete script you can copy and execute.
+
+### A first example: 4x4 rectangular grid
+Our first example will be on a small 4x4 rectangular graph. We choose this example because it executes fast and produces relatively small files. that can be examined by hand. The first step is to download the needed JSON adjacency file. For this example it is call [grid_graph_4_by_4.json](Geo/Adjacency/grid_graph_4_by_4.json) and was discussed more fully in [this Section on JSON Adjacency Files](geographic.html#sec-json-adjacency-files). You can download the file to current directory using the following commandline at the terminal
+```{.sh}
+curl   https://jonmjonm.github.io/QGDocs/Geo/Adjacency/grid_graph_4_by_4.json -o grid_graph_4_by_4.json
+```
+
+
+Now that we have the needed JSON adjacency file, open a Julia session in the directory with that datafile. We begin by activating out local environment where we have installed the CycleWalk Package and loading the `CycleWalk` and `RandomNumbers` packages. If you have not installed the `RandomNumbers` package you need to execute  `Pkg.add("RandomNumbers")` in a julia window. Make sure you have already activated the environment you intend to use.
+```{.julia}
+using Pkg
+Pkg.activate(".")       #   activate environment 
+using RandomNumbers     #   load Random Number package
+using CycleWalk         #   load Cycle Walk package
+```
+
+#### Build the Graph
+To load the graph we begin by setting the path to the adjacency file; called `grid_graph_4_by_4.json` in this case. Next we create a set holding all of the variable names we want to load from the adjacency file. Lastly, we build the graph by specifying the file name, the variable that holds th population and the nodes names, and all of the node data you want load. You need to specify which of the node data names hold the area, border length, and edge parameter data.
+```{.julia}
+## build graph
+pctGraphPath = joinpath(".","grid_graph_4_by_4.json")
+nodeData = Set(["node_name", "county", "population", "area", "border_length"]);
+graph = build_graph(pctGraphPath, "population", "node_name", nodeData;
+              area_col="area", node_border_col="border_length", 
+              edge_perimeter_col="length")
+
+```
+
+The variable `graph` is a structure that contains all of the adjacency data as well as all of the data on the vertices and edges. 
+
+
+#### Initialize a Partitions with Constraints
+We now define the constraints on the phasespace. We specify the number of connected districts in our partition. Beyond the number of constraints, in this case we will also add an absolute constraint on the population deviation. We will require all partitions (also referred to as distractings)  to have elements whose relative population deviation from the ideal population is less than `allowed_pop_dev`. The ideal population is calculated by
+$$\text{Ideal Population}=\frac{\text{Total Population}}{\text{Number of Districts}}$$
+then the relative population deviation of the $i$th district is given by
+$$ \text{$i$th relative population deviation}= \frac{\big|\text{$i$th District Population} - \text{Ideal Population}\big|}{\text{Ideal Population}}$$
+
+```{.julia}
+num_of_districts=2              # Number of districts
+allowed_pop_dev=0.05            # population deviation (fraction from ideal)
+# initialize constraints 
+constraints = initialize_constraints()
+# add population constraint 
+add_constraint!(constraints, PopulationConstraint(graph, num_of_districts, 
+                                                    allowed_pop_dev))
+# initialize a random initial partition
+rng = PCG.PCGStateOneseq(UInt64, 4541901234)    # initialize a random number generator 
+partition = LinkCutPartition(graph, constraints, num_of_districts; rng=rng, 
+                                verbose=true);
+```
+
+There are other choices of constraints one can introduce which we will discuss later.
