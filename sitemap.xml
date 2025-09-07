@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jonmjonm.github.io/QGDocs/atlasIO.html</loc>
-    <lastmod>2025-09-07T14:08:15.533Z</lastmod>
+    <loc>https://jonmjonm.github.io/QGDocs/forest_recom.html</loc>
+    <lastmod>2025-09-07T22:48:07.577Z</lastmod>
   </url>
   <url>
-    <loc>https://jonmjonm.github.io/QGDocs/geographic.html</loc>
-    <lastmod>2025-09-07T14:08:13.822Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jonmjonm.github.io/QGDocs/cycleWalk.html</loc>
-    <lastmod>2025-09-07T19:38:57.988Z</lastmod>
+    <loc>https://jonmjonm.github.io/QGDocs/about.html</loc>
+    <lastmod>2025-09-07T22:59:11.784Z</lastmod>
   </url>
   <url>
     <loc>https://jonmjonm.github.io/QGDocs/index.html</loc>
     <lastmod>2025-09-07T01:45:30.110Z</lastmod>
   </url>
   <url>
-    <loc>https://jonmjonm.github.io/QGDocs/about.html</loc>
-    <lastmod>2025-09-07T01:45:30.110Z</lastmod>
+    <loc>https://jonmjonm.github.io/QGDocs/cycleWalk.html</loc>
+    <lastmod>2025-09-07T22:35:52.641Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jonmjonm.github.io/QGDocs/geographic.html</loc>
+    <lastmod>2025-09-07T14:08:13.822Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jonmjonm.github.io/QGDocs/atlasIO.html</loc>
+    <lastmod>2025-09-07T22:45:05.616Z</lastmod>
   </url>
 </urlset>

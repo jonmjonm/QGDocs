@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Atlas Files – QG Doc</title>
+<title>Atlas Files – QG Docs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">QG Doc</span>
+    <span class="navbar-title">QG Docs</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -105,8 +105,16 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Cycle Walk</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./forest_recom.html"> 
+<span class="menu-text">Metropolized Forest RECOM</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./atlasIO.html"> 
 <span class="menu-text">Atlas Files</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://sites.duke.edu/quantifyinggerrymandering/"> 
+<span class="menu-text">QG Blog</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
@@ -161,6 +169,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./forest_recom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metropolized Forest ReCom</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./atlasIO.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Atlas Files</span></a>
   </div>
@@ -170,8 +184,19 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#atlasio-code" id="toc-atlasio-code" class="nav-link active" data-scroll-target="#atlasio-code">AtlasIO code</a></li>
+  <li><a href="#the-atlas-file-format" id="toc-the-atlas-file-format" class="nav-link" data-scroll-target="#the-atlas-file-format">The Atlas File Format</a>
+  <ul class="collapse">
+  <li><a href="#file-extension-and-compression" id="toc-file-extension-and-compression" class="nav-link" data-scroll-target="#file-extension-and-compression">File Extension and Compression</a></li>
+  <li><a href="#work-directly-with-compressed-files" id="toc-work-directly-with-compressed-files" class="nav-link" data-scroll-target="#work-directly-with-compressed-files">Work Directly with Compressed Files</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -195,8 +220,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Atlas files contain a collection of map assignments or redistrictings. The format is a specialization of the JSONL format. Each line in an Atlas file is a JSON object. The first three lines describe the particular Atlas. Starting with the fourth line, each line is a JSON object that describes a map assignment. In addition to the map assignment, each line can also contain statistics and other information about the map assignment. These can be specified by the user.</p>
+<section id="atlasio-code" class="level2">
+<h2 class="anchored" data-anchor-id="atlasio-code">AtlasIO code</h2>
+<p>The primary code is written in the Julia programming language, but it can be used in Python as well. The Julia <code>AtlasIO</code> library is an official Julia package and acn be loaded using the Julia Package Manager.</p>
+<p>The Python libraries, as well as the Julia source code, can be found in the <a href="https://github.com/jonmjonm/AtlasIO.jl">AtlasIO Git repository</a>. This repository contains a number of tools to read in and manipulate Atlas files. The Python library can only read Atlas files, it cannot write them. The Julia library can read and write Atlas files.</p>
+</section>
+<section id="the-atlas-file-format" class="level2">
+<h2 class="anchored" data-anchor-id="the-atlas-file-format">The Atlas File Format</h2>
+<p>The Atlas format is a JSONL (JSON Lines) format adapted hold district maps from redistricting efforts. The Atlas format is a simple extension of the JSONL format that allows for the storage of maps and their associated data in a single file. The <a href="https://github.com/jonmjonm/AtlasIO.jl/">AtlasIO.jl Julia library</a> provides the ability to read and write Atlas files. The <a href="https://github.com/jonmjonm/AtlasIO.jl/tree/main/PythonReader">AtlasIO.py Python library</a>, from the same git repository, provides the ability to read but not the ability to write files. This format was developed by the <a href="https://sites.duke.edu/quantifyinggerrymandering/">Duke Quantifying Gerrymandering Group</a>. ### Structure of an Atlas File Each individual line of an Atlas file is JSON object. As such they can be read line by line unlike a single JSON. * This first line is a comment that identifies the file as an Atlas of maps and describes the Atlas format. * The second line is a JSON object that describes the basic information of the collection of maps saved in this Atlas. * The third line is a JSON object that describes the extra data assigned to each map. It can be adapted to the particular setting. In particular, it gives that data times and key names associated to the additional data. * Each of the following lines, starting with the 4th line, is a JSON object that describes a map and its associated data.</p>
+<section id="file-extension-and-compression" class="level3">
+<h3 class="anchored" data-anchor-id="file-extension-and-compression">File Extension and Compression</h3>
+<p>Atlas files use the file extension <code>.jsonl</code> if the file in Atlas is plain, uncompressed text. If the Atlas is compressed it will either use the file extension <code>.jsonl.gz</code> or <code>.jsonl.bz2</code>.</p>
+<p>The <code>.gz</code> extension signifies the use of the standard <a href="https://en.m.wikipedia.org/wiki/Gzip"><strong>Gnu Zip tools</strong></a> (<code>gzip</code>, <code>gunzip</code>, <code>zcat</code>) and can be read by a number of libraries and command line tools. These tools use the standard Deflate algorithm to compress data.</p>
+<p>The <code>.bz2</code> extension signifies the use of the standard <a href="https://en.m.wikipedia.org/wiki/Bzip2"><strong>BZip2 tools</strong></a> (<code>bzip2</code>, <code>bzcat</code>) and also can be read by a number of libraries and command line tools. These tools use the standard Burrows–Wheeler algorithm to compress data.</p>
+<p>The Bzip2 compression format typically results in a smaller file than the Gzip compression format. However, the Bzip2 compression is slower to compress and uncompress. We also explored saving files by saving the incremental changes in the maps. However, it was decided that the advantage of using standard compression tools was significant in light of the very high compression ratios they delivered out of the box.</p>
+</section>
+<section id="work-directly-with-compressed-files" class="level3">
+<h3 class="anchored" data-anchor-id="work-directly-with-compressed-files">Work Directly with Compressed Files</h3>
+<p>One nice feature of the AtlasIO libraries, both in Julia and Python, is that they can read and write compressed files directly. This both increase the speed of writing and decreases the size of the Atlas files significantly.</p>
+<section id="corrupted-compressed-files" class="level4">
+<h4 class="anchored" data-anchor-id="corrupted-compressed-files">Corrupted Compressed Files</h4>
+<p>One downside of directly writing compressed files is that the files can not be directly examined during the run and might be left in a corrupted state if the run is interrupted. A corrupted file can typically easily be largely recovered using</p>
+<p><code>zcat atlas-corrupted.jsonl.gz &gt;  atlas-fixed.jsonl</code></p>
+<p>You can also use the <code>zcat</code> command to examine a file during a run.</p>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
