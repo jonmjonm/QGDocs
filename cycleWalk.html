@@ -242,6 +242,10 @@ window.Quarto = {
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#the-metropolized-cycle-walk-algorithm" id="toc-the-metropolized-cycle-walk-algorithm" class="nav-link" data-scroll-target="#the-metropolized-cycle-walk-algorithm">The Metropolized Cycle Walk Algorithm</a></li>
   <li><a href="#instillation" id="toc-instillation" class="nav-link" data-scroll-target="#instillation">Instillation</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul class="collapse">
+  <li><a href="#a-first-example-4x4-rectangular-grid" id="toc-a-first-example-4x4-rectangular-grid" class="nav-link" data-scroll-target="#a-first-example-4x4-rectangular-grid">A first example: 4x4 rectangular grid</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -283,12 +287,61 @@ window.Quarto = {
 <section id="instillation" class="level2">
 <h2 class="anchored" data-anchor-id="instillation">Instillation</h2>
 <p>The latest released version of the `CycleWalk.jl’ package can be installed from with in Julia by</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{julia}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"CycleWalk"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"CycleWalk"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This can be done from the commandline in a terminal with</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">-e</span> <span class="st">'using Pkg; Pkg.add("CycleWalk")'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="local-environments" class="level4">
+<h4 class="anchored" data-anchor-id="local-environments">Local Environments</h4>
+<p>It is recommended that you run your Julia session in a local environment to minimize unanticipated side effects from other (unneeded) packages. To add the CycleWalk package to a local environment in the current working directory</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"."</span>)       <span class="co"># replace this path to keep the local </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># environment somewhere else or with a specified name </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"CycleWalk"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p>In each example, we will step through the commands task by task. At the end of the section we will collect all of the commands into a complete script you can copy and execute.</p>
+<section id="a-first-example-4x4-rectangular-grid" class="level3">
+<h3 class="anchored" data-anchor-id="a-first-example-4x4-rectangular-grid">A first example: 4x4 rectangular grid</h3>
+<p>Our first example will be on a small 4x4 rectangular graph. We choose this example because it executes fast and produces relatively small files. that can be examined by hand. The first step is to download the needed JSON adjacency file. For this example it is call <a href="Geo/Adjacency/grid_graph_4_by_4.json">grid_graph_4_by_4.json</a> and was discussed more fully in <a href="geographic.html#sec-json-adjacency-files">this Section on JSON Adjacency Files</a>. You can download the file to current directory using the following commandline at the terminal</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span>   https://jonmjonm.github.io/QGDocs/Geo/Adjacency/grid_graph_4_by_4.json <span class="at">-o</span> grid_graph_4_by_4.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now that we have the needed JSON adjacency file, open a Julia session in the directory with that datafile. We begin by activating out local environment where we have installed the CycleWalk Package and loading the <code>CycleWalk</code> and <code>RandomNumbers</code> packages. If you have not installed the <code>RandomNumbers</code> package you need to execute <code>Pkg.add("RandomNumbers")</code> in a julia window. Make sure you have already activated the environment you intend to use.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"."</span>)       <span class="co">#   activate environment </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RandomNumbers</span>     <span class="co">#   load Random Number package</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CycleWalk</span>         <span class="co">#   load Cycle Walk package</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="build-the-graph" class="level4">
+<h4 class="anchored" data-anchor-id="build-the-graph">Build the Graph</h4>
+<p>To load the graph we begin by setting the path to the adjacency file; called <code>grid_graph_4_by_4.json</code> in this case. Next we create a set holding all of the variable names we want to load from the adjacency file. Lastly, we build the graph by specifying the file name, the variable that holds th population and the nodes names, and all of the node data you want load. You need to specify which of the node data names hold the area, border length, and edge parameter data.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## build graph</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pctGraphPath <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"."</span>,<span class="st">"grid_graph_4_by_4.json"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>nodeData <span class="op">=</span> <span class="fu">Set</span>([<span class="st">"node_name"</span>, <span class="st">"county"</span>, <span class="st">"population"</span>, <span class="st">"area"</span>, <span class="st">"border_length"</span>]);</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> <span class="fu">build_graph</span>(pctGraphPath, <span class="st">"population"</span>, <span class="st">"node_name"</span>, nodeData;</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>              area_col<span class="op">=</span><span class="st">"area"</span>, node_border_col<span class="op">=</span><span class="st">"border_length"</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>              edge_perimeter_col<span class="op">=</span><span class="st">"length"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The variable <code>graph</code> is a structure that contains all of the adjacency data as well as all of the data on the vertices and edges.</p>
+</section>
+<section id="initialize-a-partitions-with-constraints" class="level4">
+<h4 class="anchored" data-anchor-id="initialize-a-partitions-with-constraints">Initialize a Partitions with Constraints</h4>
+<p>We now define the constraints on the phasespace. We specify the number of connected districts in our partition. Beyond the number of constraints, in this case we will also add an absolute constraint on the population deviation. We will require all partitions (also referred to as distractings) to have elements whose relative population deviation from the ideal population is less than <code>allowed_pop_dev</code>. The ideal population is calculated by <span class="math display">\[\text{Ideal Population}=\frac{\text{Total Population}}{\text{Number of Districts}}\]</span> then the relative population deviation of the <span class="math inline">\(i\)</span>th district is given by <span class="math display">\[ \text{$i$th relative population deviation}= \frac{\big|\text{$i$th District Population} - \text{Ideal Population}\big|}{\text{Ideal Population}}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_of_districts<span class="op">=</span><span class="fl">2</span>              <span class="co"># Number of districts</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>allowed_pop_dev<span class="op">=</span><span class="fl">0.05</span>            <span class="co"># population deviation (fraction from ideal)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize constraints </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> <span class="fu">initialize_constraints</span>()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># add population constraint </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">PopulationConstraint</span>(graph, num_of_districts, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                                                    allowed_pop_dev))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize a random initial partition</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> PCG.<span class="fu">PCGStateOneseq</span>(<span class="dt">UInt64</span>, <span class="fl">4541901234</span>)    <span class="co"># initialize a random number generator </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>partition <span class="op">=</span> <span class="fu">LinkCutPartition</span>(graph, constraints, num_of_districts; rng<span class="op">=</span>rng, </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                                verbose<span class="op">=</span><span class="cn">true</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>There are other choices of constraints one can introduce which we will discuss later.</p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
