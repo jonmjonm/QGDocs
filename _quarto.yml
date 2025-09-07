@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "QG Doc"
+  title: "QG Docs"
   navbar:
     left:
       - href: index.qmd
@@ -10,8 +10,11 @@ website:
       - href: geographic.qmd
         text: Geographic Files
       - href: cycleWalk.qmd
+      - href: forest_recom.qmd
       - href: atlasIO.qmd
         text: Atlas Files
+      - href: https://sites.duke.edu/quantifyinggerrymandering/
+        text: QG Blog  
       - about.qmd
   sidebar: 
     style: "docked"
@@ -22,6 +25,8 @@ website:
         href: geographic.qmd  
       - text: "Cycle Walk"
         href: cycleWalk.qmd
+      - text: "Metropolized Forest ReCom"
+        href: forest_recom.qmd
       - text: "Atlas Files"
         href: atlasIO.qmd      
 

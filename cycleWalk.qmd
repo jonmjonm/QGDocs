@@ -79,8 +79,8 @@ graph = build_graph(pctGraphPath, "population", "node_name", nodeData;
 The variable `graph` is a structure that contains all of the adjacency data as well as all of the data on the vertices and edges. 
 
 
-#### Initialize a Partitions with Constraints
-We now define the constraints on the phasespace. We specify the number of connected districts in our partition. Beyond the number of constraints, in this case we will also add an absolute constraint on the population deviation. We will require all partitions (also referred to as distractings)  to have elements whose relative population deviation from the ideal population is less than `allowed_pop_dev`. The ideal population is calculated by
+#### Initialize a random Forest Partitions with specified Constraints
+We now define the constraints on the phasespace. We specify the number of connected districts in our forest partition. We will use the term *Forest Partition* with $d$ elements to describe a spanning forest with $d$ disjoint spanning trees. The vertices/nodes in each spanning tree will be the elements of the  partition of vertices/nodes induced by the  *Forest Partition*.  Beyond the number of constraints, in this case we will also add an absolute constraint on the population deviation. We will require all partitions (also referred to as distractings)  to have elements whose relative population deviation from the ideal population is less than `allowed_pop_dev`. The ideal population is calculated by
 $$\text{Ideal Population}=\frac{\text{Total Population}}{\text{Number of Districts}}$$
 then the relative population deviation of the $i$th district is given by
 $$ \text{$i$th relative population deviation}= \frac{\big|\text{$i$th District Population} - \text{Ideal Population}\big|}{\text{Ideal Population}}$$
@@ -99,4 +99,206 @@ partition = LinkCutPartition(graph, constraints, num_of_districts; rng=rng,
                                 verbose=true);
 ```
 
-There are other choices of constraints one can introduce which we will discuss later.
+There are other choices of constraints one can introduce which we will discuss later. The `LinkCutPartition` function tries to generate though a random algorithm a partition with `num_of_districts` districts that satisfies the specified constraints. It tires up to on the order of 100 times and returns the first acceptable partition generated. If all of the attempts fail, it throws an error message.
+
+#### Defining the Measure {#sec-define-measure}
+Next we define the target measure we want to sample from. In this simple example we will only consider *log spanning forest* energy that we will denote by $h(\xi)$ for a given  partition $\xi$. It is defined by 
+$h(\xi)=\log \text{Tree}(\xi)$ where $\text{Tree}(\xi)$ is the number spanning forest which induce the given partition $\xi$.
+When the parameter $\gamma$ bellow is taken to be zero then the measure is uniform on spanning forests while $\gamma=1$ corresponds to uniform on partitions. Normally, it is not wise to consider the uniform measure on partitions without an isoparmetric energy in the measure. However on a small graph like this, it does not matter.
+
+```{.julia}
+measure = Measure()     # build measure
+gamma=0.0               # typically a number in [0,1]
+push_energy!(measure, get_log_spanning_forests, gamma) # add spanning forests energy
+```
+
+#### Build the Proposal for Metropolis–Hastings MCMC
+
+We now build the Markov Chain that will be used as a proposal in a [Metropolis–Hastings](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm) Algorithm to construct a markov chains guaranteed to have the measure constructed [above](#sec-define-measure) as a stationary measure. 
+
+```{.julia}
+cycle_walk_2_tree = build_two_tree_cycle_walk(constraints)
+cycle_walk_1_tree = build_one_tree_cycle_walk(constraints)
+twocycle_frac=0.1   # fraction of 2-tree cycle walks among total walks
+proposal = [(twocycle_frac, cycle_walk_2_tree), 
+            (1.0-twocycle_frac, cycle_walk_1_tree)]
+```
+
+#### Choose the Output
+
+We now establish the name of the output file as well as fix a few parameters we want to be written to the file in addition to the vertex/node assignment that makes the current partition. 
+
+```{.julia}
+atlasName = "cycleWalk"*"_grid4x4_" * "_gamma" * string(gamma)*"_kappa"*string(twocycle_frac) *".jsonl"
+output_file_path = joinpath("output","grid", atlasName) 
+```
+
+Next we construct a map writer that will output the current districting as well as some selected statistics about the districting and the run so far.
+
+```{.julia}
+ad_param = Dict{String, Any}("popdev" => allowed_pop_dev)   # specific info to write
+writer = Writer(measure, constraints, partition, output_file_path; 
+                additional_parameters=ad_param)
+push_writer!(writer, get_log_spanning_trees)        # add spanning trees count to writer
+push_writer!(writer, get_log_spanning_forests)      # add spanning forests count to writer
+push_writer!(writer, get_isoperimetric_scores)      # add isoperimetric scores to writer
+```
+
+#### Run the Markov Chain
+
+We now run the metropolized Cycle Walk with the proposal we constructed above.
+
+```{.julia}
+cycle_walk_2_tree_steps = 100
+steps = Int(cycle_walk_2_tree_steps/twocycle_frac)
+outfreq = Int(1/twocycle_frac)
+```
+
+
+
+```{.julia}
+println("running mcmc; outputting here: "* output_file_path)
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=outfreq)
+close_writer(writer) # close atlas
+```
+
+#### Putting Everything Together
+
+```{.julia}
+using Pkg
+Pkg.activate(".")       #   activate environment 
+using RandomNumbers     #   load Random Number package
+using CycleWalk         #   load Cycle Walk package
+
+## build graph
+pctGraphPath = joinpath(".","grid_graph_4_by_4.json")
+nodeData = Set(["node_name", "county", "population", "area", "border_length"]);
+graph = build_graph(pctGraphPath, "population", "node_name", nodeData;
+              area_col="area", node_border_col="border_length", 
+              edge_perimeter_col="length")
+
+num_of_districts=2              # Number of districts
+allowed_pop_dev=0.05            # population deviation (fraction from ideal)
+# initialize constraints 
+constraints = initialize_constraints()
+# add population constraint 
+add_constraint!(constraints, PopulationConstraint(graph, num_of_districts, 
+                                                    allowed_pop_dev))
+# initialize a random initial partition
+rng = PCG.PCGStateOneseq(UInt64, 4541901234)    # initialize a random number generator 
+partition = LinkCutPartition(graph, constraints, num_of_districts; rng=rng, 
+                                verbose=true);
+
+measure = Measure()     # build measure
+gamma=0.0               # typically a number in [0,1]
+push_energy!(measure, get_log_spanning_forests, gamma) # add spanning forests energy
+
+cycle_walk_2_tree = build_two_tree_cycle_walk(constraints)
+cycle_walk_1_tree = build_one_tree_cycle_walk(constraints)
+twocycle_frac=0.1   # fraction of 2-tree cycle walks among total walks
+proposal = [(twocycle_frac, cycle_walk_2_tree), 
+            (1.0-twocycle_frac, cycle_walk_1_tree)]
+
+#set output file name
+atlasName = "cycleWalk"*"_grid4x4_" * "_gamma" * string(gamma)*"_kappa"*string(twocycle_frac) *".jsonl"
+output_file_path = joinpath("output","grid", atlasName) 
+
+# create writer and open output atlas
+ad_param = Dict{String, Any}("popdev" => allowed_pop_dev)   # specific info to write
+writer = Writer(measure, constraints, partition, output_file_path; 
+                additional_parameters=ad_param)
+push_writer!(writer, get_log_spanning_trees)        # add spanning trees count to writer
+push_writer!(writer, get_log_spanning_forests)      # add spanning forests count to writer
+push_writer!(writer, get_isoperimetric_scores)      # add isoperimetric scores to writer
+
+# Run the MCMC
+cycle_walk_2_tree_steps = 100
+steps = Int(cycle_walk_2_tree_steps/twocycle_frac)
+outfreq = Int(1/twocycle_frac)
+
+println("running mcmc; outputting here: "* output_file_path)
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=outfreq)
+close_writer(writer) # close atlas
+
+```
+
+### A second example: 10x10 hexagonal grid
+
+We now consider a small variation on our previous example. We consider a planner region with a regular triangulation. The dual/adjacency graph is a hexagonal lattice. We begin by downloading the needed JSON adjacency file to our current directory.
+
+```{.sh}
+curl  https://jonmjonm.github.io/QGDocs/Geo/Adjacency/hex_graph_10_by_10.json -o hex_graph_10_by_10.json
+```
+
+#### A Modified Script 
+
+We now give code to run on the 10x10 hexagonal lattice. It will only require some small modifications from the previous example given above. Beyond the obvious such as modifying the input and output files, we will also increase the number of districts to 4 and decrease the allowed population deviation. This last step is possible as the number of element in each district increases providing finer granularity. We will also introduce an isodiametric score in the target measure to keep the districts compact no matter what constant is placed in front of the log spanning forests term in the energy. Recall that as that constant goes to one, the  log spanning forests energy causes the probability measure to converge to the uniform measure on partitions if no other weights are used.  The uniform measure on partitions is full of space-filling partitions that are very, very non-compact.
+
+```{.julia code-line-numbers="true"}
+using Pkg
+Pkg.activate(".")       #   activate environment 
+using RandomNumbers     #   load Random Number package
+using CycleWalk         #   load Cycle Walk package
+
+## build graph
+pctGraphPath = joinpath(".","hex_graph_10_by_10.json")
+nodeData = Set(["node_name", "county", "population", "area", "border_length"]);
+graph = build_graph(pctGraphPath, "population", "node_name", nodeData;
+              area_col="area", node_border_col="border_length", 
+              edge_perimeter_col="length")
+
+num_of_districts=5              # Number of districts
+allowed_pop_dev=0.02            # population deviation (fraction from ideal)
+# initialize constraints 
+constraints = initialize_constraints()
+# add population constraint 
+add_constraint!(constraints, PopulationConstraint(graph, num_of_districts, 
+                                                    allowed_pop_dev))
+# initialize a random initial partition
+rng = PCG.PCGStateOneseq(UInt64, 4541901234)    # initialize a random number generator 
+partition = LinkCutPartition(graph, constraints, num_of_districts; rng=rng, 
+                                verbose=true);
+
+measure = Measure()     # build measure
+gamma=0.0               # typically a number in [0,1]
+iso_weight= 0.3         # weight on the sum of isoperimetric ratios; i.e. Polsby-Popper
+push_energy!(measure, get_log_spanning_forests, gamma) # add spanning forests energy
+push_energy!(measure, get_isoperimetric_score, iso_weight) # add isoperimetric score energy
+
+cycle_walk_2_tree = build_two_tree_cycle_walk(constraints)
+cycle_walk_1_tree = build_one_tree_cycle_walk(constraints)
+twocycle_frac=0.1   # fraction of 2-tree cycle walks among total walks
+proposal = [(twocycle_frac, cycle_walk_2_tree), 
+            (1.0-twocycle_frac, cycle_walk_1_tree)]
+
+#set output file name
+atlasName = "cycleWalk"*"_hex10x10_" * "_gamma" * string(gamma)*"_kappa"
+atlasName*= string(twocycle_frac)*"_iso"*string(iso_weight)*".jsonl"
+
+output_file_path = joinpath("output","grid", atlasName) 
+
+# create writer and open output atlas
+ad_param = Dict{String, Any}("popdev" => allowed_pop_dev)   # specific info to write
+writer = Writer(measure, constraints, partition, output_file_path; 
+                additional_parameters=ad_param)
+push_writer!(writer, get_log_spanning_trees)        # add spanning trees count to writer
+push_writer!(writer, get_log_spanning_forests)      # add spanning forests count to writer
+push_writer!(writer, get_isoperimetric_scores)      # add isoperimetric scores to writer
+
+# Run the MCMC
+cycle_walk_2_tree_steps = 100
+steps = Int(cycle_walk_2_tree_steps/twocycle_frac)
+outfreq = Int(1/twocycle_frac)
+
+println("running mcmc; outputting here: "* output_file_path)
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=outfreq)
+close_writer(writer) # close atlas
+```
+
+The lines change are 7, 13, 14, 27, 29, 38 and 39. Of these the most important of the non-cosmetic changes is the introduction of the isoparmetric score in line 29.
+
+### A small realistic example: Connecticut Congressional Districts.
+
