@@ -6,8 +6,8 @@ format: html
 
 These are the basic formate used to hold the Adjacency file or dual graph for a region to be redistricted. It is based on the JSON output of the NetworkX Python library. An example for a 4x4 grid here [grid_graph_4_by_4.json](Geo/Adjacency/grid_graph_4_by_4.json). 
 
-Such a file contains  list of the nodes/vertices as a list under 'node'. A sample node entry is
-```default
+Such a file contains  list of the nodes/vertices as a list under `node`. A sample node entry is
+```JSON
     {
         "node_name": "(0,0)",
         "id": 0,
@@ -19,9 +19,36 @@ Such a file contains  list of the nodes/vertices as a list under 'node'. A sampl
         "county": "A"
     }
 ```
-where the `id`, `area`, `population` and `border_length` are required. They give the name by which the vertex/node are referred to as well as the `area` and `population` of the partition unit associated to the vertex/node. 
+where the `id`, `area`, `population` and `border_length` are required. They give the name by which the vertex/node are referred to as well as the `area` and `population` of the partition unit associated to the vertex/node. `border_length` entry give the length of the external boundary of the partition unit associated to the vertex/node. Hence of a vertex/node is interior this number is zero. The precise labels can be different than these as the name mapping to each piece of data can be specified at runtime.
 
+One can also encode additional information. This example gives a node name in `node_name`, a location in the plane to help with plotting in `x_location` and `y_location`. It also records which county the node is in. This example uses fictitious county names of "A" and "B". Additionally, the vote count for each party in a collection of elections is also often included. 
 
+After the list of noted, there is an `adjacency` entry which contains one list for each of the vertices/nodes. The first list under `adjacency` gives the vertices/nodes that are adjacent to the first vertex/node listed above. 
+
+For example of the second entry in the adjacency list is the following list, then the 2nd note is adjacent to the 4th and 5th node listed with a boundary whose length is respectively one and two units.
+```JSON
+{
+    {
+    "id": 4,
+    "length": 1
+    },
+    {
+    "id": 5,
+    "length": 2
+    }
+}
+```
+
+### Example files
+
+| Description | File Name | Comments  |
+|---------|:-----|------:|
+| 12      | [grid_graph_8_by_8.json](Geo/Adjacency/grid_graph_8_by_8.json) |    12 | 
+| 123     | [grid_graph_10_by_10.json](Geo/Adjacency/grid_graph_10_by_10.json)  |   123 | 
+| 1       | [Geo/Adjacency/hex_graph_10_by_10.json](Geo/Adjacency/hex_graph_10_by_10.json)   |     1 | 
+| | [CT_pct20.json](Geo/Adjacency/CT_pct20.json)|   |
+
+: Collection of Sample Adjacency Files
 
 ## Shapefiles
 
