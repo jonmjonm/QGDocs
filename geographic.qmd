@@ -42,14 +42,20 @@ For example of the second entry in the adjacency list is the following list, the
 ### Example files
 
 | Description | File Name | Comments  |
-|---------|:-----|------:|
-| 12      | [grid_graph_8_by_8.json](Geo/Adjacency/grid_graph_8_by_8.json) |    12 | 
-| 123     | [grid_graph_10_by_10.json](Geo/Adjacency/grid_graph_10_by_10.json)  |   123 | 
-| 1       | [Geo/Adjacency/hex_graph_10_by_10.json](Geo/Adjacency/hex_graph_10_by_10.json)   |     1 | 
-| | [CT_pct20.json](Geo/Adjacency/CT_pct20.json)|   |
+|---------|:-----|:------|
+| 4x4 Rectangular Grid | [grid_graph_4_by_4.json](Geo/Adjacency/grid_graph_4_by_4.json)| Simple regular graph. All nodes have area and population 1. Grid divided into two counties labeled "A" and "B"  |
+| 8x8 Rectangular Grid   | [grid_graph_8_by_8.json](Geo/Adjacency/grid_graph_8_by_8.json) |    8x8 version of previous. | 
+| 10x10 Rectangular Grid  | [grid_graph_10_by_10.json](Geo/Adjacency/grid_graph_10_by_10.json)  |   10x10 version of previous. | 
+| 10x10 Hexagonal Grid    | [hex_graph_10_by_10.json](Geo/Adjacency/hex_graph_10_by_10.json)   | The graph is now hexagonal rather than square. Each node in the interior has 6 neighbors. This is the dual graph of a region partitioned into triangles.  | 
+| Connecticut Adjacency Graph  | [CT_pct20.json](Geo/Adjacency/CT_pct20.json)| Precinct Adjacency Graph of the state of Connecticut. Contains county names in `COUNTY`, Precinct name in `NAME`, 2020 Population in `POP20`, area and border length in `area` and `border_length`, party votes from 2020 presidential general election in `G20PREDEM` and `G20PREREP` |
 
-: Collection of Sample Adjacency Files
+: Collection of Sample Adjacency Files {tbl-colwidths="[25,25,40]"}
+
 
 ## Shapefiles
 
+The [shapefile](https://en.wikipedia.org/wiki/Shapefile) format is a geospatial vector data format for geographic information system (GIS) software. It was developed and regulated by Esri and is used to transfer data between many GIS systems. While the actual shape file has the extension `.shp` there are also to other required files with the extensions `.shx` and `.dbf`. All three are often zipped together into one file and called the "shapefile". There are tools for creating a JSON adjacency file from a shapefile though a fair bit of cleaning is required.
+
 ## GeoJSON
+
+[GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) is a file formate that is the primary open sourse alternative to the shapefile formate.
