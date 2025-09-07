@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
-<col style="width: 30%">
+<col style="width: 40%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -279,27 +279,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>4x4 Rectangular Grid</td>
 <td style="text-align: left;"><a href="Geo/Adjacency/grid_graph_4_by_4.json">grid_graph_4_by_4.json</a></td>
-<td style="text-align: left;">Simple regular graph. All nodes have area and population 1.</td>
+<td style="text-align: left;">Simple regular graph. All nodes have area and population 1. Grid divided into two counties labeled “A” and “B”</td>
 </tr>
 <tr class="even">
 <td>8x8 Rectangular Grid</td>
 <td style="text-align: left;"><a href="Geo/Adjacency/grid_graph_8_by_8.json">grid_graph_8_by_8.json</a></td>
-<td style="text-align: left;">12</td>
+<td style="text-align: left;">8x8 version of previous.</td>
 </tr>
 <tr class="odd">
 <td>10x10 Rectangular Grid</td>
 <td style="text-align: left;"><a href="Geo/Adjacency/grid_graph_10_by_10.json">grid_graph_10_by_10.json</a></td>
-<td style="text-align: left;">123</td>
+<td style="text-align: left;">10x10 version of previous.</td>
 </tr>
 <tr class="even">
 <td>10x10 Hexagonal Grid</td>
 <td style="text-align: left;"><a href="Geo/Adjacency/hex_graph_10_by_10.json">hex_graph_10_by_10.json</a></td>
-<td style="text-align: left;">1</td>
+<td style="text-align: left;">The graph is now hexagonal rather than square. Each node in the interior has 6 neighbors. This is the dual graph of a region partitioned into triangles.</td>
 </tr>
 <tr class="odd">
 <td>Connecticut Adjacency Graph</td>
 <td style="text-align: left;"><a href="Geo/Adjacency/CT_pct20.json">CT_pct20.json</a></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Precinct Adjacency Graph of the state of Connecticut. Contains county names in <code>COUNTY</code>, Precinct name in <code>NAME</code>, 2020 Population in <code>POP20</code>, area and border length in <code>area</code> and <code>border_length</code>, party votes from 2020 presidential general election in <code>G20PREDEM</code> and <code>G20PREREP</code></td>
 </tr>
 </tbody>
 </table>
@@ -307,9 +307,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="shapefiles" class="level2">
 <h2 class="anchored" data-anchor-id="shapefiles">Shapefiles</h2>
+<p>The <a href="https://en.wikipedia.org/wiki/Shapefile">shapefile</a> format is a geospatial vector data format for geographic information system (GIS) software. It was developed and regulated by Esri and is used to transfer data between many GIS systems. While the actual shape file has the extension <code>.shp</code> there are also to other required files with the extensions <code>.shx</code> and <code>.dbf</code>. All three are often zipped together into one file and called the “shapefile”. There are tools for creating a JSON adjacency file from a shapefile though a fair bit of cleaning is required.</p>
 </section>
 <section id="geojson" class="level2">
 <h2 class="anchored" data-anchor-id="geojson">GeoJSON</h2>
+<p><a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> is a file formate that is the primary open sourse alternative to the shapefile formate.</p>
 
 
 </section>
