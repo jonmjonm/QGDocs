@@ -16,8 +16,10 @@ This repository contains a number of tools to read in and manipulate Atlas files
 ## The Atlas File Format
 
 The Atlas format is a JSONL (JSON Lines) format adapted hold district maps from redistricting efforts. The Atlas format is a simple extension of the JSONL format that allows for the storage of maps and their associated data in a single file. The [AtlasIO.jl Julia library](https://github.com/jonmjonm/AtlasIO.jl/) provides the ability to read and write Atlas files. The [AtlasIO.py Python library](https://github.com/jonmjonm/AtlasIO.jl/tree/main/PythonReader), from the same git repository, provides the ability to read but not the ability to write files. This format was developed by the [Duke Quantifying Gerrymandering Group](https://sites.duke.edu/quantifyinggerrymandering/). 
+
 ### Structure of an Atlas File
 Each individual line of an Atlas file is JSON object. As such they can be read line by line unlike a single JSON. 
+
 * This first line is a comment that identifies the file as an Atlas of maps and describes the Atlas format. 
 * The second line is a JSON object that describes the basic information of the collection of maps saved in this Atlas. 
 * The third line is a JSON object that describes the extra data assigned to each map. It can be adapted to the particular setting. In particular, it gives that data times and key names associated to the additional data.
