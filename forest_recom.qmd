@@ -6,4 +6,8 @@ bibliography: ref.bib
 
 Metropolized Forest Recom [@autry2023metropolized,@autry2021metropolized] is an extension of the Recom (or Recombination) algorithm developed by DeFord, Duchin, and Solomon [@deford2019recombination]. It modifies the original, whose stationary measure is unknown, to an algorithm that is computational feasible to use as a proposal for a Metropolis-Hastings scheme. This gives the user better knowledge of what measure the ensample of maps has been drawn from and how they prioritize various legal and cultural norms in redistricting.
 
-Additionally, 
+Additionally, the multiscale version has been used with great success to create redistrictings that preserve particular geographic structures. In our experience it work  better than weights or score functions. This is  especially true when one wants approach the minimum number of county splits possible.
+
+There have been a number of different code bases that implemented this algorithm, include ones in C++, Python and Julia. We currently recommend the Julia codebase that is official Julia package and hence can be installed using the Julia Package manager. 
+
+More information can be found at the [Git Repository](https://github.com/jonmjonm/MetropolizedForestRecom.jl).

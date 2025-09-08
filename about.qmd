@@ -2,4 +2,4 @@
 title: "About"
 ---
 
-This site gives introductions to some of the tools developed by the *Duke Quantifying Gerrymandering* group. The group, headed by [Jonathan C. Mattingly](https://sites.math.duke.edu/~jonm/) and [Gregory J. Herschlag](https://scholars.duke.edu/person/gjh), works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.  More information see the groups [blog](https://sites.duke.edu/quantifyinggerrymandering/).
+This site gives introductions to some of the tools developed by the *Duke Quantifying Gerrymandering* group. The group, headed by [Jonathan C. Mattingly](https://sites.math.duke.edu/~jonm/) and [Gregory J. Herschlag](https://scholars.duke.edu/person/gjh), works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups [blog](https://sites.duke.edu/quantifyinggerrymandering/).
