@@ -525,6 +525,71 @@ window.Quarto = {
 </section>
 <section id="a-small-realistic-example-connecticut-congressional-districts." class="level3">
 <h3 class="anchored" data-anchor-id="a-small-realistic-example-connecticut-congressional-districts.">A small realistic example: Connecticut Congressional Districts.</h3>
+<p>We now consider a smaller but realistic example of generating district maps for Connecticut with five confusional districts. As before, we begin by downloading the needed JSON adjacency file for Connecticut.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>curl  https<span class="op">://</span>jonmjonm.github.io<span class="op">/</span>QGDocs<span class="op">/</span>Geo<span class="op">/</span>Adjacency<span class="op">/</span>CT_pct20.json <span class="op">-</span>o CT_pct20.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"."</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RandomNumbers</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CycleWalk</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>twocycle_frac <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> <span class="fl">0.0</span> <span class="co"># 0 is spanning forest measure, 1 is partition</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>iso_weight <span class="op">=</span> <span class="fl">0.3</span> <span class="co"># weight on the sum of isoperimetric ratios; i.e. Polsby-Popper</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>num_dists <span class="op">=</span> <span class="fl">5</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@assert</span> <span class="fl">0</span> <span class="op">≤</span> twocycle_frac <span class="op">≤</span> <span class="fl">1</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> PCG.<span class="fu">PCGStateOneseq</span>(<span class="dt">UInt64</span>, <span class="fl">4541901234</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>pop_dev <span class="op">=</span> <span class="fl">0.02</span> <span class="co"># population deviation (fraction from ideal)</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>cycle_walk_steps <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="fu">Int</span>(cycle_walk_steps<span class="op">/</span>twocycle_frac)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>outfreq <span class="op">=</span> <span class="fu">Int</span>(<span class="fl">400</span><span class="op">/</span>twocycle_frac)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">## build graph</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>pctGraphPath <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"."</span>,<span class="st">"CT_pct20.json"</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>nodeData <span class="op">=</span> <span class="fu">Set</span>([<span class="st">"COUNTY"</span>, <span class="st">"NAME"</span>, <span class="st">"POP20"</span>, <span class="st">"area"</span>, <span class="st">"border_length"</span>]);</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> <span class="fu">build_graph</span>(pctGraphPath, <span class="st">"POP20"</span>, <span class="st">"NAME"</span>, nodeData;</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>              area_col<span class="op">=</span><span class="st">"area"</span>, node_border_col<span class="op">=</span><span class="st">"border_length"</span>, </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>              edge_perimeter_col<span class="op">=</span><span class="st">"length"</span>)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co">## build partition</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> <span class="fu">initialize_constraints</span>()</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">PopulationConstraint</span>(graph, num_dists, pop_dev))</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>partition <span class="op">=</span> <span class="fu">LinkCutPartition</span>(graph, constraints, num_dists; rng<span class="op">=</span>rng, </span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>                             verbose<span class="op">=</span><span class="cn">true</span>);</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co">## build proposal</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>cycle_walk_2_tree <span class="op">=</span> <span class="fu">build_two_tree_cycle_walk</span>(constraints)</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>cycle_walk_1_tree <span class="op">=</span> <span class="fu">build_one_tree_cycle_walk</span>(constraints)</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>proposal <span class="op">=</span> [(twocycle_frac, cycle_walk_2_tree), </span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>            (<span class="fl">1.0</span><span class="op">-</span>twocycle_frac, cycle_walk_1_tree)]</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co">## build measure</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>measure <span class="op">=</span> <span class="fu">Measure</span>()</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="fu">push_energy!</span>(measure, get_log_spanning_forests, gamma) <span class="co"># add spanning forests energy</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="fu">push_energy!</span>(measure, get_isoperimetric_score, iso_weight) <span class="co"># add isoperimetric score energy</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="co">## establish output name and path</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>atlasName <span class="op">=</span> <span class="st">"cycleWalk_ct_kappa"</span><span class="fu">*string</span>(twocycle_frac)</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>atlasName <span class="op">*=</span> <span class="st">"_gamma"</span><span class="fu">*string</span>(gamma)</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>atlasName <span class="op">*=</span> <span class="st">"_iso"</span><span class="fu">*string</span>(iso_weight)</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>atlasName <span class="op">*=</span> <span class="st">".jsonl.gz"</span> <span class="co"># or just ".jsonl" for an uncompressed output</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>output_file_path <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"output"</span>,<span class="st">"ct"</span>, atlasName) <span class="co"># add output directory to path</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="co">## establish writer to which the output will be written</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>ad_param <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{String, Any}</span>(<span class="st">"popdev"</span> <span class="op">=&gt;</span> pop_dev) <span class="co"># specific info to write</span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>writer <span class="op">=</span> <span class="fu">Writer</span>(measure, constraints, partition, output_file_path; </span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>                additional_parameters<span class="op">=</span>ad_param)</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_log_spanning_trees) <span class="co"># add spanning trees count to writer</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_log_spanning_forests) <span class="co"># add spanning forests count to writer</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_isoperimetric_scores) <span class="co"># add isoperimetric scores to writer</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="co">## run MCMC sampler</span></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"running mcmc; outputting here: "</span><span class="op">*</span> output_file_path)</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="fu">run_metropolis_hastings!</span>(partition, proposal, measure, steps, rng,</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>                         writer<span class="op">=</span>writer, output_freq<span class="op">=</span>outfreq)</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a><span class="fu">close_writer</span>(writer) <span class="co"># close atlas</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
