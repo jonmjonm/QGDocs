@@ -224,6 +224,15 @@ close_writer(writer) # close atlas
 
 ```
 
+After you run the script, look at the file generate. It should be inside the directory `output/grid/` and named something like `cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl`. It should  look something like the following file. Of course the details will be different as your random seed might be different.
+
+
+<div class="scrollable-content">
+```{.json}
+{{< include examples/cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl >}}
+```
+</div>
+
 ### A second example: 10x10 hexagonal grid
 
 We now consider a small variation on our previous example. We consider a planner region with a regular triangulation. The dual/adjacency graph is a hexagonal lattice. We begin by downloading the needed JSON adjacency file to our current directory.
