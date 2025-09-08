@@ -25,6 +25,16 @@ Each individual line of an Atlas file is JSON object. As such they can be read l
 * The third line is a JSON object that describes the extra data assigned to each map. It can be adapted to the particular setting. In particular, it gives that data times and key names associated to the additional data.
 * Each of the following lines, starting with the 4th line, is a JSON object that describes a map and its associated data.
 
+#### Example Atlas file
+
+This is a simple example of Atlas file. It is for splitting a 4x4 rectangular grid into two districts. It was generated using the cycle walk algorithm. The file can be down loaded here [cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl](examples/cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl).
+
+<div class="scrollable-content">
+```{.json}
+{{< include examples/cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl >}}
+```
+</div>
+
 ### File Extension and Compression
 
 Atlas files use the file extension `.jsonl` if the file in Atlas is plain, uncompressed text. If the Atlas is compressed it will either use the file extension `.jsonl.gz` or `.jsonl.bz2`. 
