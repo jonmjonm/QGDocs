@@ -2,3 +2,4 @@
 /_site/
 /test/
 **/*.quarto_ipynb
+/.vscode/
