@@ -15,14 +15,14 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "This site gives introductions to some of the tools developed by the Duke Quantifying Gerrymandering group. The group, headed by Jonathan C. Mattingly and Gregory J. Herschlag, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups blog."
+    "text": "This site gives introductions to some of the tools developed by the Duke Quantifying Gerrymandering group. The group, headed by Jonathan C. Mattingly and Gregory J. Herschlag, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups blog.\nThis is a Quarto website. To learn more visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Quantifying Gerrymandering Documentation",
+    "title": "Quantifying Gerrymandering Project Documentation",
     "section": "",
-    "text": "This is a Quarto website. To learn more visit https://quarto.org/docs/websites."
+    "text": "This site gives introductions to some of the tools developed by the Duke Quantifying Gerrymandering group. The group, headed by Jonathan C. Mattingly and Gregory J. Herschlag, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups blog.\nA few tools of possible particular interest are:\n\nCycle Walk: A Julia implementation of a promising algorithm to sample an ensemble of redistricting maps from a specified measure on the space of all redistrictings.\nMetropolized Forest RECOM: An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution and so that it can better preserve geographical structure like counties.\nAtlas File Format: The format used by the Quantifying Gerrymandering Project’s software to efficiently store and document a collection of maps. The AtlasIO packages in Julia and Python can be used to read and process the files."
   },
   {
     "objectID": "cycleWalk.html",

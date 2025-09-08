@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quantifying Gerrymandering Documentation – QG Docs</title>
+<title>Quantifying Gerrymandering Project Documentation – QG Docs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -131,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quantifying Gerrymandering Documentation</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quantifying Gerrymandering Project Documentation</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -192,7 +192,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quantifying Gerrymandering Documentation</h1>
+<h1 class="title">Quantifying Gerrymandering Project Documentation</h1>
 </div>
 
 
@@ -209,7 +209,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website. To learn more visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<p>This site gives introductions to some of the tools developed by the <em>Duke Quantifying Gerrymandering</em> group. The group, headed by <a href="https://sites.math.duke.edu/~jonm/">Jonathan C. Mattingly</a> and <a href="https://scholars.duke.edu/person/gjh">Gregory J. Herschlag</a>, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups <a href="https://sites.duke.edu/quantifyinggerrymandering/">blog</a>.</p>
+<p>A few tools of possible particular interest are:</p>
+<ul>
+<li><strong><a href="./cycleWalk.html">Cycle Walk</a>:</strong> A Julia implementation of a promising algorithm to sample an ensemble of redistricting maps from a specified measure on the space of all redistrictings.</li>
+<li><strong><a href="./forest_recom.html">Metropolized Forest RECOM</a>:</strong> An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution and so that it can better preserve geographical structure like counties.</li>
+<li><strong><a href="./atlasIO.html">Atlas File Format</a>:</strong> The format used by the Quantifying Gerrymandering Project’s software to efficiently store and document a collection of maps. The AtlasIO packages in Julia and Python can be used to read and process the files.</li>
+</ul>
 
 
 
