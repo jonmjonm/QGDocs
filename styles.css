@@ -1,1 +1,9 @@
 /* css styles */
+.scrollable-content {
+      white-space: preserve nowrap;; /* Ensures text wraps within the box */;
+      max-height: 300px; /* Adjust height as needed */
+      overflow-x: auto; /* Adds vertical scrollbar when content exceeds max-width */
+      overflow-y: auto; /* Adds vertical scrollbar when content exceeds max-height */
+      border: 1px solid #ccc; /* Optional: adds a border for visual separation */
+      padding: 10px; /* Optional: adds padding inside the box */
+    }
