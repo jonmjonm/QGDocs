@@ -224,7 +224,7 @@ close_writer(writer) # close atlas
 
 ```
 
-After you run the script, look at the file generate. It should be inside the directory `output/grid/` and named something like `cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl`. It should  look something like the following file. Of course the details will be different as your random seed might be different.
+After you run the script, look at the file generate. It should be inside the directory `output/grid/` and named something like `cycleWalk_grid4x4__gamma0.0_kappa0.1.jsonl`. It should  look something like the following file. Of course the details will be different as your random seed might be different. Notice that the first three lines describe the Atlas file while the fourth line on are the individual maps that were saved.
 
 
 <div class="scrollable-content">
