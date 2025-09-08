@@ -192,6 +192,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#atlasio-code" id="toc-atlasio-code" class="nav-link active" data-scroll-target="#atlasio-code">AtlasIO code</a></li>
   <li><a href="#the-atlas-file-format" id="toc-the-atlas-file-format" class="nav-link" data-scroll-target="#the-atlas-file-format">The Atlas File Format</a>
   <ul class="collapse">
+  <li><a href="#structure-of-an-atlas-file" id="toc-structure-of-an-atlas-file" class="nav-link" data-scroll-target="#structure-of-an-atlas-file">Structure of an Atlas File</a></li>
   <li><a href="#file-extension-and-compression" id="toc-file-extension-and-compression" class="nav-link" data-scroll-target="#file-extension-and-compression">File Extension and Compression</a></li>
   <li><a href="#work-directly-with-compressed-files" id="toc-work-directly-with-compressed-files" class="nav-link" data-scroll-target="#work-directly-with-compressed-files">Work Directly with Compressed Files</a></li>
   </ul></li>
@@ -228,7 +229,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="the-atlas-file-format" class="level2">
 <h2 class="anchored" data-anchor-id="the-atlas-file-format">The Atlas File Format</h2>
-<p>The Atlas format is a JSONL (JSON Lines) format adapted hold district maps from redistricting efforts. The Atlas format is a simple extension of the JSONL format that allows for the storage of maps and their associated data in a single file. The <a href="https://github.com/jonmjonm/AtlasIO.jl/">AtlasIO.jl Julia library</a> provides the ability to read and write Atlas files. The <a href="https://github.com/jonmjonm/AtlasIO.jl/tree/main/PythonReader">AtlasIO.py Python library</a>, from the same git repository, provides the ability to read but not the ability to write files. This format was developed by the <a href="https://sites.duke.edu/quantifyinggerrymandering/">Duke Quantifying Gerrymandering Group</a>. ### Structure of an Atlas File Each individual line of an Atlas file is JSON object. As such they can be read line by line unlike a single JSON. * This first line is a comment that identifies the file as an Atlas of maps and describes the Atlas format. * The second line is a JSON object that describes the basic information of the collection of maps saved in this Atlas. * The third line is a JSON object that describes the extra data assigned to each map. It can be adapted to the particular setting. In particular, it gives that data times and key names associated to the additional data. * Each of the following lines, starting with the 4th line, is a JSON object that describes a map and its associated data.</p>
+<p>The Atlas format is a JSONL (JSON Lines) format adapted hold district maps from redistricting efforts. The Atlas format is a simple extension of the JSONL format that allows for the storage of maps and their associated data in a single file. The <a href="https://github.com/jonmjonm/AtlasIO.jl/">AtlasIO.jl Julia library</a> provides the ability to read and write Atlas files. The <a href="https://github.com/jonmjonm/AtlasIO.jl/tree/main/PythonReader">AtlasIO.py Python library</a>, from the same git repository, provides the ability to read but not the ability to write files. This format was developed by the <a href="https://sites.duke.edu/quantifyinggerrymandering/">Duke Quantifying Gerrymandering Group</a>.</p>
+<section id="structure-of-an-atlas-file" class="level3">
+<h3 class="anchored" data-anchor-id="structure-of-an-atlas-file">Structure of an Atlas File</h3>
+<p>Each individual line of an Atlas file is JSON object. As such they can be read line by line unlike a single JSON.</p>
+<ul>
+<li>This first line is a comment that identifies the file as an Atlas of maps and describes the Atlas format.</li>
+<li>The second line is a JSON object that describes the basic information of the collection of maps saved in this Atlas.</li>
+<li>The third line is a JSON object that describes the extra data assigned to each map. It can be adapted to the particular setting. In particular, it gives that data times and key names associated to the additional data.</li>
+<li>Each of the following lines, starting with the 4th line, is a JSON object that describes a map and its associated data.</li>
+</ul>
+</section>
 <section id="file-extension-and-compression" class="level3">
 <h3 class="anchored" data-anchor-id="file-extension-and-compression">File Extension and Compression</h3>
 <p>Atlas files use the file extension <code>.jsonl</code> if the file in Atlas is plain, uncompressed text. If the Atlas is compressed it will either use the file extension <code>.jsonl.gz</code> or <code>.jsonl.bz2</code>.</p>
