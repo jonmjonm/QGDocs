@@ -1,17 +1,28 @@
 [
   {
+    "objectID": "forest_recom.html",
+    "href": "forest_recom.html",
+    "title": "Metropolized Forest RECOM",
+    "section": "",
+    "text": "Metropolized Forest Recom E. A. Autry et al. (2021) is an extension of the Recom (or Recombination) algorithm developed by DeFord, Duchin, and Solomon (DeFord, Duchin, and Solomon 2021). It modifies the original, whose stationary measure is unknown, to an algorithm that is computational feasible to use as a proposal for a Metropolis-Hastings scheme. This gives the user better knowledge of what measure the ensample of maps has been drawn from and how they prioritize various legal and cultural norms in redistricting.\nAdditionally, the multiscale version has been used with great success to create redistrictings that preserve particular geographic structures. In our experience it work better than weights or score functions. This is especially true when one wants approach the minimum number of county splits possible.\nThere have been a number of different code bases that implemented this algorithm, include ones in C++, Python and Julia. We currently recommend the Julia codebase that is official Julia package and hence can be installed using the Julia Package manager.\nMore information can be found at the Git Repository.\n\n\n\n\nReferences\n\nAutry, Eric A, Daniel Carter, Gregory J Herschlag, Zach Hunter, and Jonathan C Mattingly. 2021. “Metropolized Multiscale Forest Recombination for Redistricting.” Multiscale Modeling & Simulation 19 (4): 1885–1914.\n\n\nAutry, Eric, Daniel Carter, Gregory J Herschlag, Zach Hunter, and Jonathan C Mattingly. 2023. “Metropolized Forest Recombination for Monte Carlo Sampling of Graph Partitions.” SIAM Journal on Applied Mathematics 83 (4): 1366–91.\n\n\nDeFord, Daryl, Moon Duchin, and Justin Solomon. 2021. “Recombination: A Family of Markov Chains for Redistricting.” Harvard Data Science Review 3 (1).",
+    "crumbs": [
+      "Home",
+      "Metropolized Forest ReCom"
+    ]
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "This site gives introductions to some of the tools developed by the Duke Quantifying Gerrymandering group. The group, headed by Jonathan C. Mattingly and Gregory J. Herschlag, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used. More information see the groups blog."
+    "text": "This site gives introductions to some of the tools developed by the Duke Quantifying Gerrymandering group. The group, headed by Jonathan C. Mattingly and Gregory J. Herschlag, works to understand how to assess the degree to which political districts capture the will of the people in the elections in which they are used.The group has benefited from collaboration countless colleagues and students. For more information, please see the groups blog."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Quantifying Gerrymandering Documentation",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "This is a Quarto website. To learn more visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "cycleWalk.html",
