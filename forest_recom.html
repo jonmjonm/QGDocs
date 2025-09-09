@@ -318,6 +318,53 @@ div.csl-indent {
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># now that the field "county_and_prec_id" is set, we can use it to create the </span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># graph object that we will sample on</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> <span class="fu">Graph</span>(base_graph, <span class="st">"county_and_prec_id"</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="add-constraints-and-initial-random-partition" class="level4">
+<h4 class="anchored" data-anchor-id="add-constraints-and-initial-random-partition">Add Constraints and Initial Random Partition</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add constraints</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>num_dists<span class="op">=</span><span class="fl">14</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>pop_dev <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> <span class="fu">initialize_constraints</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">PopulationConstraint</span>(graph, num_dists, pop_dev))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># create initial random partition</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>rng_seed <span class="op">=</span> <span class="fl">110934571</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> PCG.<span class="fu">PCGStateOneseq</span>(<span class="dt">UInt64</span>, rng_seed)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>partition <span class="op">=</span> <span class="fu">Partition</span>(graph, constraints, num_dists; rng<span class="op">=</span>rng);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="build-metropolis-hastings-proposal-chain" class="level4">
+<h4 class="anchored" data-anchor-id="build-metropolis-hastings-proposal-chain">Build Metropolis-Hastings Proposal Chain</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>proposal <span class="op">=</span> <span class="fu">build_forest_recom2</span>(constraints)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="specify-target-measure" class="level4">
+<h4 class="anchored" data-anchor-id="specify-target-measure">Specify Target Measure</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gamma<span class="op">=</span><span class="fl">0.0</span>;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alpha<span class="op">=</span><span class="fl">1.1</span>;</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>iso<span class="op">=</span><span class="fl">0.45</span>;</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>measure <span class="op">=</span> <span class="fu">Measure</span>(gamma, alpha); <span class="co"># spanning forest measure; </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                            <span class="co"># first number is exponent on trees, second on linking edges</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">push_measure!</span>(measure, get_isoperimetric_score, iso); <span class="co"># add iso parametric score</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="set-output" class="level4">
+<h4 class="anchored" data-anchor-id="set-output">Set Output</h4>
+<pre class="juila"><code>output_file_path = joinpath("output", "nc", 
+                            "metropolizedForestRECOM_1level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
+writer = Writer(measure, constraints, partition, output_file_path)
+push_writer!(writer, get_log_spanning_trees)
+push_writer!(writer, get_log_spanning_forests)
+push_writer!(writer, get_isoperimetric_scores)</code></pre>
+</section>
+<section id="run-metropolized-mcmc" class="level4">
+<h4 class="anchored" data-anchor-id="run-metropolized-mcmc">Run Metropolized MCMC</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>steps<span class="op">=</span>steps <span class="op">=</span> <span class="fl">100</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>output_freq<span class="op">=</span><span class="fl">1</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"startring mcmc"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">run_metropolis_hastings!</span>(partition, proposal, measure, steps, rng,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                         writer<span class="op">=</span>writer, output_freq<span class="op">=</span>output_freq);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="putting-everything-together" class="level4">
+<h4 class="anchored" data-anchor-id="putting-everything-together">Putting Everything Together</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 
