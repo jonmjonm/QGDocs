@@ -247,6 +247,7 @@ div.csl-indent {
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#instillation" id="toc-instillation" class="nav-link" data-scroll-target="#instillation">Instillation</a></li>
   <li><a href="#a-one-level-example-on-nc" id="toc-a-one-level-example-on-nc" class="nav-link" data-scroll-target="#a-one-level-example-on-nc">A one-level example on NC</a></li>
+  <li><a href="#a-two-level-example-on-nc" id="toc-a-two-level-example-on-nc" class="nav-link" data-scroll-target="#a-two-level-example-on-nc">A Two-level Example on NC</a></li>
   </ul>
 </nav>
     </div>
@@ -415,6 +416,82 @@ div.csl-indent {
 <span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"startring mcmc"</span>)</span>
 <span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="fu">run_metropolis_hastings!</span>(partition, proposal, measure, steps, rng,</span>
 <span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>                         writer<span class="op">=</span>writer, output_freq<span class="op">=</span>output_freq);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="a-two-level-example-on-nc" class="level3">
+<h3 class="anchored" data-anchor-id="a-two-level-example-on-nc">A Two-level Example on NC</h3>
+<p>Now we will run MCMC on a phase space that consists of hierarchical graphs with the top level being counties and the finer level being precincts.</p>
+<section id="loading-packages" class="level4">
+<h4 class="anchored" data-anchor-id="loading-packages">Loading Packages</h4>
+<p>Assuming we have already created a local environment as in the previous example. Then we can load the packages as follows.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"./runMetropolizedRecomEnv"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">instantiate</span>()</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RandomNumbers</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MetropolizedForestRecom</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="initialize-the-graph-1" class="level4">
+<h4 class="anchored" data-anchor-id="initialize-the-graph-1">Initialize the Graph</h4>
+<p>We now initialize a two-level graph. We specify the two layers by <code>["county", "prec_id"]</code>. The <code>graph</code> object that is instantiation of a 2-level graph.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pctGraphPath <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"."</span>, <span class="st">"NC_pct21.json"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>nodeData <span class="op">=</span> <span class="fu">Set</span>([<span class="st">"county"</span>, <span class="st">"prec_id"</span>, <span class="st">"pop2020cen"</span>, <span class="st">"area"</span>, <span class="st">"border_length"</span>]);</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> <span class="fu">Graph</span>(pctGraphPath, <span class="st">"pop2020cen"</span>, [<span class="st">"county"</span>, <span class="st">"prec_id"</span>]; </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>              inc_node_data<span class="op">=</span>nodeData, area_col<span class="op">=</span><span class="st">"area"</span>, </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>              node_border_col<span class="op">=</span><span class="st">"border_length"</span>, edge_perimeter_col<span class="op">=</span><span class="st">"length"</span>, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>              edge_weights<span class="op">=</span><span class="st">"connections"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="constraints" class="level4">
+<h4 class="anchored" data-anchor-id="constraints">Constraints</h4>
+<p>We now create the set of constraints. We include the same constraint as before on the population deviation. But we also add a constraint that ensures pieces of districts in a county are contiguous and and a constraint maximum number of split counties.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>num_dists <span class="op">=</span> <span class="fl">14</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pop_dev <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> <span class="fu">initialize_constraints</span>()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">PopulationConstraint</span>(graph, num_dists, pop_dev))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ensures pieces of districts in a county are contiguous; currently required</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">ConstrainDiscontinuousTraversals</span>(graph)) </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># fixes the maximum number of split counties</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">add_constraint!</span>(constraints, <span class="fu">MaxCoarseNodeSplits</span>(num_dists<span class="op">+</span><span class="fl">1</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="generate-initial-partition" class="level4">
+<h4 class="anchored" data-anchor-id="generate-initial-partition">Generate Initial Partition</h4>
+<p>Now we generate a random initial 2-level partition.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rng_seed <span class="op">=</span> <span class="fl">454190</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> PCG.<span class="fu">PCGStateOneseq</span>(<span class="dt">UInt64</span>, rng_seed)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>partition <span class="op">=</span> <span class="fu">Partition</span>(graph, constraints, num_dists; rng<span class="op">=</span>rng);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="proposal" class="level4">
+<h4 class="anchored" data-anchor-id="proposal">Proposal</h4>
+<p>Next, we instantiate the proposal chain which will be a multilevel Forest Recom. This proposal chain first mearges two districts. Then it loosely draws a uniform spanning tree on the top-level (which is counties in this case). They it picks which edge to remove. THis implied which county must be split. One then draws a uniform spanning tree on the finer level (which is predicts in this case). More details can be found in <span class="citation" data-cites="autry2021metropolized">(<a href="#ref-autry2021metropolized" role="doc-biblioref">E. A. Autry et al. 2021</a>)</span>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>proposal <span class="op">=</span> <span class="fu">build_forest_recom2</span>(constraints)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="target-measure" class="level4">
+<h4 class="anchored" data-anchor-id="target-measure">Target Measure</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>iso<span class="op">=</span><span class="fl">0.45</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gamma<span class="op">=</span><span class="fl">0.0</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>pop_dev <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>measure <span class="op">=</span> <span class="fu">Measure</span>(gamma, <span class="fl">1.0</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># to add elements to the measure, e.g.</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">push_measure!</span>(measure, get_isoperimetric_score, iso )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="setup-output" class="level4">
+<h4 class="anchored" data-anchor-id="setup-output">Setup output</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>output_file_path <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"output"</span>, <span class="st">"NC"</span>,                       </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="st">"metropolizedForestRECOM_2level_gamma"</span><span class="fu">*string</span>(gamma)<span class="op">*</span><span class="st">"_iso"</span><span class="fu">*string</span>(iso)<span class="op">*</span><span class="st">".jsonl.gz"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>writer <span class="op">=</span> <span class="fu">Writer</span>(measure, constraints, partition, output_file_path)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_log_spanning_forests)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_isoperimetric_scores)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="run-markov-chain" class="level4">
+<h4 class="anchored" data-anchor-id="run-markov-chain">Run Markov Chain</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="fl">1000</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>output_freq<span class="op">=</span><span class="fl">10</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"startring mcmc"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">run_metropolis_hastings!</span>(partition, proposal, measure, steps, rng,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                         writer<span class="op">=</span>writer, output_freq<span class="op">=</span>output_freq);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 
