@@ -65,3 +65,67 @@ end
 # graph object that we will sample on
 graph = Graph(base_graph, "county_and_prec_id");
 ```
+
+#### Add Constraints and Initial Random Partition 
+
+```{.julia}
+# add constraints
+num_dists=14 
+pop_dev = 0.02
+constraints = initialize_constraints()
+add_constraint!(constraints, PopulationConstraint(graph, num_dists, pop_dev))
+
+# create initial random partition
+rng_seed = 110934571
+rng = PCG.PCGStateOneseq(UInt64, rng_seed)
+partition = Partition(graph, constraints, num_dists; rng=rng);
+```
+
+#### Build Metropolis-Hastings Proposal Chain
+
+```{.julia}
+proposal = build_forest_recom2(constraints)
+```
+
+
+#### Specify Target Measure
+
+```{.julia}
+gamma=0.0;
+alpha=1.1;
+iso=0.45;
+measure = Measure(gamma, alpha); # spanning forest measure; 
+                            # first number is exponent on trees, second on linking edges
+push_measure!(measure, get_isoperimetric_score, iso); # add iso parametric score
+```
+
+#### Set Output
+
+```{.juila}
+output_file_path = joinpath("output", "nc", 
+                            "metropolizedForestRECOM_1level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
+writer = Writer(measure, constraints, partition, output_file_path)
+push_writer!(writer, get_log_spanning_trees)
+push_writer!(writer, get_log_spanning_forests)
+push_writer!(writer, get_isoperimetric_scores)
+```
+
+
+#### Run Metropolized MCMC
+
+
+```{.julia}
+steps=steps = 100
+output_freq=1
+println("startring mcmc")
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=output_freq);
+```
+
+
+#### Putting Everything Together
+
+```{.julia}
+
+
+```
