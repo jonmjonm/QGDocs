@@ -241,7 +241,7 @@ partition = Partition(graph, constraints, num_dists; rng=rng);
 
 #### Proposal
 
-Next, we instantiate the proposal chain which will be a multilevel Forest Recom. This proposal chain 
+Next, we instantiate the proposal chain which will be a multilevel Forest Recom. This proposal chain first mearges two districts. Then it loosely  draws a uniform spanning tree on the top-level (which is counties in this case). They it picks which edge to remove. THis implied which county must be split. One then draws a uniform spanning tree on the finer level (which is predicts in this case). More details can be found in [@autry2021metropolized].
 ```{.julia}
 proposal = build_forest_recom2(constraints)
 ```
