@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -213,14 +233,22 @@ ul.task-list li input[type="checkbox"] {
 <p>A few tools of possible particular interest are:</p>
 <ul>
 <li><strong><a href="./cycleWalk.html">Cycle Walk</a>:</strong> A Julia implementation of a promising algorithm to sample an ensemble of redistricting maps from a specified measure on the space of all redistrictings.</li>
-<li><strong><a href="./forest_recom.html">Metropolized Forest RECOM</a>:</strong> An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution. and so that it can better preserve geographical structure like counties. <span class="citation" data-cites="autry2023metropolized">[See @autry2023metropolized]</span></li>
-<li><strong><a href="./forest_recom.html">Metropolized Multi-scale Forest RECOM</a>:</strong> An algorithm that modifies further modifies Metropolized Forest RECOM so that it runs on a multiscale graph. One advantage is that it can better preserve geographical structure like counties. <span class="citation" data-cites="autry2021metropolized">[See @autry2021metropolized]</span></li>
+<li><strong><a href="./forest_recom.html">Metropolized Forest RECOM</a>:</strong> An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution. and so that it can better preserve geographical structure like counties. <span class="citation" data-cites="autry2023metropolized">(See <a href="#ref-autry2023metropolized" role="doc-biblioref">E. Autry et al. 2023</a>)</span></li>
+<li><strong><a href="./forest_recom.html">Metropolized Multi-scale Forest RECOM</a>:</strong> An algorithm that modifies further modifies Metropolized Forest RECOM so that it runs on a multiscale graph. One advantage is that it can better preserve geographical structure like counties. <span class="citation" data-cites="autry2021metropolized">(See <a href="#ref-autry2021metropolized" role="doc-biblioref">E. A. Autry et al. 2021</a>)</span></li>
 <li><strong><a href="./atlasIO.html">Atlas File Format</a>:</strong> The format used by the Quantifying Gerrymandering Project’s software to efficiently store and document a collection of maps. The AtlasIO packages in Julia and Python can be used to read and process the files.</li>
 </ul>
 
 
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-autry2021metropolized" class="csl-entry" role="listitem">
+Autry, Eric A, Daniel Carter, Gregory J Herschlag, Zach Hunter, and Jonathan C Mattingly. 2021. <span>“Metropolized Multiscale Forest Recombination for Redistricting.”</span> <em>Multiscale Modeling &amp; Simulation</em> 19 (4): 1885–1914.
+</div>
+<div id="ref-autry2023metropolized" class="csl-entry" role="listitem">
+Autry, Eric, Daniel Carter, Gregory J Herschlag, Zach Hunter, and Jonathan C Mattingly. 2023. <span>“Metropolized Forest Recombination for Monte Carlo Sampling of Graph Partitions.”</span> <em>SIAM Journal on Applied Mathematics</em> 83 (4): 1366–91.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
