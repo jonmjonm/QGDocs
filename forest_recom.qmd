@@ -41,7 +41,7 @@ using MetropolizedForestRecom
 
 The first step is to download the needed JSON adjacency file. For this example it is call [NC_pct21.json](Geo/Adjacency/NC_pct21.json) and was discussed more fully in [this Section on JSON Adjacency Files](geographic.html#sec-json-adjacency-files). You can download the file to current directory using the following commandline at the terminal
 ```{.sh}
-curl   https://jonmjonm.github.io/QGDocs/Geo/Adjacency/NC_pct21.json -o NC_pct21.json
+curl   https://raw.githubusercontent.com/jonmjonm/QGDocs/refs/heads/main/Geo/Adjacency/NC_pct21.json -o NC_pct21.json
 ```
 
 #### Initialize the Graph
