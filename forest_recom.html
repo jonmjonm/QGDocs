@@ -347,12 +347,12 @@ div.csl-indent {
 </section>
 <section id="set-output" class="level4">
 <h4 class="anchored" data-anchor-id="set-output">Set Output</h4>
-<pre class="juila"><code>output_file_path = joinpath("output", "nc", 
-                            "metropolizedForestRECOM_1level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
-writer = Writer(measure, constraints, partition, output_file_path)
-push_writer!(writer, get_log_spanning_trees)
-push_writer!(writer, get_log_spanning_forests)
-push_writer!(writer, get_isoperimetric_scores)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>output_file_path <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"output"</span>, <span class="st">"nc"</span>, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"metropolizedForestRECOM_1level_gamma"</span><span class="fu">*string</span>(gamma)<span class="op">*</span><span class="st">"_iso"</span><span class="fu">*string</span>(iso)<span class="op">*</span><span class="st">".jsonl.gz"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>writer <span class="op">=</span> <span class="fu">Writer</span>(measure, constraints, partition, output_file_path)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_log_spanning_trees)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_log_spanning_forests)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">push_writer!</span>(writer, get_isoperimetric_scores)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="run-metropolized-mcmc" class="level4">
 <h4 class="anchored" data-anchor-id="run-metropolized-mcmc">Run Metropolized MCMC</h4>
