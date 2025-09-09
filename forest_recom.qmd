@@ -178,3 +178,108 @@ println("startring mcmc")
 run_metropolis_hastings!(partition, proposal, measure, steps, rng,
                          writer=writer, output_freq=output_freq);
 ```
+
+### A Two-level Example on NC
+
+Now we will run MCMC on a phase space that consists of hierarchical graphs with the top level being counties and the finer level being precincts.
+
+#### Loading Packages
+Assuming we have already created a local environment as in the previous example.  Then we can load the packages as follows.
+
+```{.julia}
+import Pkg
+Pkg.activate("./runMetropolizedRecomEnv")
+Pkg.instantiate()
+
+using RandomNumbers
+using MetropolizedForestRecom
+```
+
+####  Initialize the Graph
+We now initialize a two-level graph. We specify the two layers  by `["county", "prec_id"]`.
+The `graph` object that is instantiation of a 2-level graph.
+
+```{.julia}
+pctGraphPath = joinpath(".", "NC_pct21.json")
+nodeData = Set(["county", "prec_id", "pop2020cen", "area", "border_length"]);
+graph = Graph(pctGraphPath, "pop2020cen", ["county", "prec_id"]; 
+              inc_node_data=nodeData, area_col="area", 
+              node_border_col="border_length", edge_perimeter_col="length", 
+              edge_weights="connections")
+```
+
+#### Constraints
+
+We now create the set of constraints. We include the same constraint as before on the population deviation. But we also add  a constraint that ensures pieces of districts in a county are contiguous and 
+ and a constraint maximum number of split counties.
+
+```{.julia}
+num_dists = 14
+pop_dev = 0.02
+
+constraints = initialize_constraints()
+add_constraint!(constraints, PopulationConstraint(graph, num_dists, pop_dev))
+
+# ensures pieces of districts in a county are contiguous; currently required
+add_constraint!(constraints, ConstrainDiscontinuousTraversals(graph)) 
+
+# fixes the maximum number of split counties
+add_constraint!(constraints, MaxCoarseNodeSplits(num_dists+1)) 
+```
+
+
+#### Generate Initial Partition
+
+Now we generate a random initial 2-level partition.
+
+```{.julia}
+rng_seed = 454190
+rng = PCG.PCGStateOneseq(UInt64, rng_seed)
+partition = Partition(graph, constraints, num_dists; rng=rng);
+```
+
+
+#### Proposal
+
+Next, we instantiate the proposal chain which will be a multilevel Forest Recom. This proposal chain 
+```{.julia}
+proposal = build_forest_recom2(constraints)
+```
+
+#### Target Measure
+
+```{.julia}
+iso=0.45
+gamma=0.0
+pop_dev = 0.02
+measure = Measure(gamma, 1.0)
+# to add elements to the measure, e.g.
+push_measure!(measure, get_isoperimetric_score, iso )
+```
+
+#### Setup output
+
+
+```{.julia}
+output_file_path = joinpath("output", "NC",                       
+"metropolizedForestRECOM_2level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
+writer = Writer(measure, constraints, partition, output_file_path)
+push_writer!(writer, get_log_spanning_forests)
+push_writer!(writer, get_isoperimetric_scores)
+```
+
+
+#### Run Markov Chain
+
+```{.julia}
+steps = 1000
+output_freq=10
+println("startring mcmc")
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=output_freq);
+```
+
+
+
+
+
