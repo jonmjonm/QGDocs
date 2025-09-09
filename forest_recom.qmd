@@ -126,6 +126,55 @@ run_metropolis_hastings!(partition, proposal, measure, steps, rng,
 #### Putting Everything Together
 
 ```{.julia}
+using Pkg
+Pkg.activate(".")
+using RandomNumbers
+using MetropolizedForestRecom
 
+# manually read in base_graph so that we can set a unique identifier that 
+# combines county and precinct id
+pctGraphPath = joinpath(".", "NC_pct21.json")
+nodeData = Set(["county", "prec_id", "pop2020cen", "area", "border_length"]);
+base_graph = BaseGraph(pctGraphPath, "pop2020cen", inc_node_data=nodeData,
+                       area_col="area", node_border_col="border_length",
+                       edge_perimeter_col="length", edge_weights="connections");
+# combines county and precinct id
+for ii = 1:length(base_graph.node_attributes)
+    county = base_graph.node_attributes[ii]["county"]
+    prec_id = base_graph.node_attributes[ii]["prec_id"]
+    name = county*"_"*prec_id
+    base_graph.node_attributes[ii]["county_and_prec_id"] = name
+end
+# now that the field "county_and_prec_id" is set, we can use it to create the 
+# graph object that we will sample on
+graph = Graph(base_graph, "county_and_prec_id");
 
+# add constraints
+num_dists=14 
+pop_dev = 0.02
+constraints = initialize_constraints()
+add_constraint!(constraints, PopulationConstraint(graph, num_dists, pop_dev))
+
+# create initial random partition
+rng_seed = 110934571
+rng = PCG.PCGStateOneseq(UInt64, rng_seed)
+partition = Partition(graph, constraints, num_dists; rng=rng);
+
+# build proposal
+proposal = build_forest_recom2(constraints)
+
+# set output file and data
+output_file_path = joinpath("output", "nc", 
+                            "metropolizedForestRECOM_1level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
+writer = Writer(measure, constraints, partition, output_file_path)
+push_writer!(writer, get_log_spanning_trees)
+push_writer!(writer, get_log_spanning_forests)
+push_writer!(writer, get_isoperimetric_scores)
+
+# run the MCMC Chain
+steps=steps = 100
+output_freq=1
+println("startring mcmc")
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=output_freq);
 ```
