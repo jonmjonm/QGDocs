@@ -101,7 +101,7 @@ push_measure!(measure, get_isoperimetric_score, iso); # add iso parametric score
 
 #### Set Output
 
-```{.juila}
+```{.julia}
 output_file_path = joinpath("output", "nc", 
                             "metropolizedForestRECOM_1level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
 writer = Writer(measure, constraints, partition, output_file_path)
