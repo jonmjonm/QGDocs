@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -204,8 +239,16 @@ div.csl-indent {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#instillation" id="toc-instillation" class="nav-link" data-scroll-target="#instillation">Instillation</a></li>
+  <li><a href="#a-one-level-example-on-nc" id="toc-a-one-level-example-on-nc" class="nav-link" data-scroll-target="#a-one-level-example-on-nc">A one-level example on NC</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -229,13 +272,57 @@ div.csl-indent {
 </header>
 
 
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>Metropolized Forest Recom <span class="citation" data-cites="autry2023metropolized">E. A. Autry et al. (<a href="#ref-autry2021metropolized" role="doc-biblioref">2021</a>)</span> is an extension of the Recom (or Recombination) algorithm developed by DeFord, Duchin, and Solomon <span class="citation" data-cites="deford2019recombination">(<a href="#ref-deford2019recombination" role="doc-biblioref">DeFord, Duchin, and Solomon 2021</a>)</span>. It modifies the original, whose stationary measure is unknown, to an algorithm that is computational feasible to use as a proposal for a Metropolis-Hastings scheme. This gives the user better knowledge of what measure the ensample of maps has been drawn from and how they prioritize various legal and cultural norms in redistricting.</p>
 <p>Additionally, the multiscale version has been used with great success to create redistrictings that preserve particular geographic structures. In our experience it work better than weights or score functions. This is especially true when one wants approach the minimum number of county splits possible.</p>
 <p>There have been a number of different code bases that implemented this algorithm, include ones in C++, Python and Julia. We currently recommend the Julia codebase that is official Julia package and hence can be installed using the Julia Package manager.</p>
 <p>More information can be found at the <a href="https://github.com/jonmjonm/MetropolizedForestRecom.jl">Git Repository</a>.</p>
+</section>
+<section id="instillation" class="level3">
+<h3 class="anchored" data-anchor-id="instillation">Instillation</h3>
+<p>Metropolized Forest Recom is writing in the Julia programming language and registered as an official Julia package. It can be installed using the Julia package manager. Generally it is recommended that you run the code in an local environment. This can be done with the <code>activate</code> command. After activating the environment, we need to install the needed packages.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"."</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"RandomNumbers"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"MetropolizedForestRecom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Once this instillation is complete, one can activate the local environment and load the needed packages as follows.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"."</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RandomNumbers</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MetropolizedForestRecom</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="a-one-level-example-on-nc" class="level3">
+<h3 class="anchored" data-anchor-id="a-one-level-example-on-nc">A one-level example on NC</h3>
+<section id="download-the-adjacency-file" class="level4">
+<h4 class="anchored" data-anchor-id="download-the-adjacency-file">Download the Adjacency File</h4>
+<p>The first step is to download the needed JSON adjacency file. For this example it is call <a href="Geo/Adjacency/NC_pct21.json">NC_pct21.json</a> and was discussed more fully in <a href="geographic.html#sec-json-adjacency-files">this Section on JSON Adjacency Files</a>. You can download the file to current directory using the following commandline at the terminal</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span>   https://raw.githubusercontent.com/jonmjonm/QGDocs/refs/heads/main/Geo/Adjacency/NC_pct21.json <span class="at">-o</span> NC_pct21.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="initialize-the-graph" class="level4">
+<h4 class="anchored" data-anchor-id="initialize-the-graph">Initialize the Graph</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually read in base_graph so that we can set a unique identifier that </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># combines county and precinct id</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pctGraphPath <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">"."</span>, <span class="st">"NC_pct21.json"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nodeData <span class="op">=</span> <span class="fu">Set</span>([<span class="st">"county"</span>, <span class="st">"prec_id"</span>, <span class="st">"pop2020cen"</span>, <span class="st">"area"</span>, <span class="st">"border_length"</span>]);</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>base_graph <span class="op">=</span> <span class="fu">BaseGraph</span>(pctGraphPath, <span class="st">"pop2020cen"</span>, inc_node_data<span class="op">=</span>nodeData,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                       area_col<span class="op">=</span><span class="st">"area"</span>, node_border_col<span class="op">=</span><span class="st">"border_length"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                       edge_perimeter_col<span class="op">=</span><span class="st">"length"</span>, edge_weights<span class="op">=</span><span class="st">"connections"</span>);</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># combines county and precinct id</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ii <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(base_graph.node_attributes)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    county <span class="op">=</span> base_graph.node_attributes[ii][<span class="st">"county"</span>]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    prec_id <span class="op">=</span> base_graph.node_attributes[ii][<span class="st">"prec_id"</span>]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> county<span class="op">*</span><span class="st">"_"</span><span class="op">*</span>prec_id</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    base_graph.node_attributes[ii][<span class="st">"county_and_prec_id"</span>] <span class="op">=</span> name</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># now that the field "county_and_prec_id" is set, we can use it to create the </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># graph object that we will sample on</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> <span class="fu">Graph</span>(base_graph, <span class="st">"county_and_prec_id"</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 
+</section>
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-autry2021metropolized" class="csl-entry" role="listitem">
