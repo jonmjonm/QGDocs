@@ -261,7 +261,7 @@ push_measure!(measure, get_isoperimetric_score, iso )
 
 
 ```{.julia}
-output_file_path = joinpath("output", "NC",                       
+output_file_path = joinpath("output", "nc",                       
 "metropolizedForestRECOM_2level_gamma"*string(gamma)*"_iso"*string(iso)*".jsonl.gz")
 writer = Writer(measure, constraints, partition, output_file_path)
 push_writer!(writer, get_log_spanning_forests)

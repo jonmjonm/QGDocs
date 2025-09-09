@@ -7,7 +7,8 @@ This site gives introductions to some of the tools developed by the *Duke Quanti
 A few tools of possible particular interest are:
 
 - **[Cycle Walk](cycleWalk.qmd):** A Julia implementation of a promising algorithm to sample an ensemble of redistricting maps from a specified measure on the space of all redistrictings.
-- **[Metropolized Forest RECOM](forest_recom.qmd):** An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution and so that it can better preserve geographical structure like counties. 
+- **[Metropolized Forest RECOM](forest_recom.qmd):** An algorithm that modifies the original RECOM algorithm so that it can better sample from a specified probability distribution. and so that it can better preserve geographical structure like counties. [See @autry2023metropolized]
+- **[Metropolized Multi-scale Forest RECOM](forest_recom.qmd):** An algorithm that modifies further modifies  Metropolized Forest RECOM so that it runs on a multiscale graph. One advantage is that it can better preserve geographical structure like counties. [See @autry2021metropolized]
 - **[Atlas File Format](atlasIO.qmd):** The format used by the Quantifying Gerrymandering Project's software to efficiently store and document a collection of maps. The AtlasIO packages in Julia and Python can be used to read and process the files. 
 
 
