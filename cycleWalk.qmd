@@ -25,7 +25,7 @@ More details on the algorithm can be found in the [Cycle Walk paper].
 
 ## Instillation
 
-The latest released version of the `CycleWalk.jl' package can be installed from with in Julia by 
+The latest released version of the `CycleWalk.jl` package can be installed from with in Julia by 
 
 ```{.julia}
 using Pkg
@@ -36,6 +36,7 @@ This can be done from the commandline in a terminal with
 ```{.sh}
 julia -e 'using Pkg; Pkg.add("CycleWalk")'
 ```
+If you have not installed Julia, it is remended that you instal the `juliaup` command and use it to instal `julia`. Direction can be found here: [juliaup](https://julialang.org/install/) .
 
 #### Local Environments
 
@@ -318,7 +319,6 @@ curl  https://jonmjonm.github.io/QGDocs/Geo/Adjacency/CT_pct20.json -o CT_pct20.
 ```
 
 ```{.julia}
-
 import Pkg
 Pkg.activate(".")
 using RandomNumbers
@@ -381,5 +381,4 @@ println("running mcmc; outputting here: "* output_file_path)
 run_metropolis_hastings!(partition, proposal, measure, steps, rng,
                          writer=writer, output_freq=outfreq)
 close_writer(writer) # close atlas
-
 ```
