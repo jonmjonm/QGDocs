@@ -160,22 +160,43 @@ window.Quarto = {
     <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./geographic.html"> 
-<span class="menu-text">Geographic Files</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sampling-code" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sampling Code</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sampling-code">    
+        <li>
+    <a class="dropdown-item" href="./cycleWalk.html">
+ <span class="dropdown-text">Cycle Walk</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./cycleWalk.html"> 
-<span class="menu-text">Cycle Walk</span></a>
+        <li>
+    <a class="dropdown-item" href="./forest_recom.html">
+ <span class="dropdown-text">Metropolized Forest ReCom</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./forest_recom.html"> 
-<span class="menu-text">Metropolized Forest RECOM</span></a>
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-files" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Data Files</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-data-files">    
+        <li>
+    <a class="dropdown-item" href="./geographic.html">
+ <span class="dropdown-text">Geographic Files</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./atlasIO.html"> 
-<span class="menu-text">Atlas Files</span></a>
+        <li>
+    <a class="dropdown-item" href="./atlasIO.html">
+ <span class="dropdown-text">Atlas Files</span></a>
   </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">Processing Code</span>
+    </span>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link" href="https://sites.duke.edu/quantifyinggerrymandering/"> 
 <span class="menu-text">QG Blog</span></a>
@@ -221,12 +242,6 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./geographic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Geographic Files</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./cycleWalk.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Cycle Walk</span></a>
   </div>
@@ -235,6 +250,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./forest_recom.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Metropolized Forest ReCom</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./geographic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geographic Files</span></a>
   </div>
 </li>
         <li class="sidebar-item">
