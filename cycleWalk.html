@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -320,7 +340,7 @@ window.Quarto = {
 <p>The basic Cycle Walk produced <span class="math inline">\(d\)</span>-tree spanning forests where each of the <span class="math inline">\(d\)</span>-spanning trees is approximately balanced in the sense that the total population of each tree is approximately balanced.</p>
 <p>One step of the Cycle Walk proceeds by either proposing a 1-Tree Cycle Walk or a 2-Tree Cycle Walk. The 1-Tree Cycle Walk adds an edge the tree and then removes and edge from cycle this addition creates so that one again has a tree. The 2-Tree Cycle Walk adds two edges between two adjacent trees and then removes two edges from the cycle these additions creates so that one again has two trees.</p>
 <p>The Metropolized Cycle Walk algorithm uses these walks as proposals to a Metropolis-Hastings algorithm to sample from a specified target distribution.</p>
-<p>More details on the algorithm can be found in the [Cycle Walk paper].</p>
+<p>More details on the algorithm can be found in the <span class="citation" data-cites="deford2025cyclewalksamplingmeasures">(<a href="#ref-deford2025cyclewalksamplingmeasures" role="doc-biblioref">DeFord, Herschlag, and Mattingly 2025</a>)</span>.</p>
 </section>
 <section id="instillation" class="level2">
 <h2 class="anchored" data-anchor-id="instillation">Instillation</h2>
@@ -788,10 +808,15 @@ window.Quarto = {
 <span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a><span class="fu">close_writer</span>(writer) <span class="co"># close atlas</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-deford2025cyclewalksamplingmeasures" class="csl-entry" role="listitem">
+DeFord, Daryl R., Gregory Herschlag, and Jonathan C. Mattingly. 2025. <span>“A Cycle Walk for Sampling Measures on Spanning Forests for Redistricting.”</span> <a href="https://arxiv.org/abs/2509.08629">https://arxiv.org/abs/2509.08629</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
