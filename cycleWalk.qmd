@@ -382,3 +382,77 @@ run_metropolis_hastings!(partition, proposal, measure, steps, rng,
                          writer=writer, output_freq=outfreq)
 close_writer(writer) # close atlas
 ```
+
+
+### A larger realistic example: North Carolina Congressional Districts.
+
+We now consider a smaller but realistic example of generating district maps for North Carolina with 14 confusional districts. As before, we begin by downloading the needed JSON adjacency file for North Carolina.
+
+```{.sh}
+curl   https://raw.githubusercontent.com/jonmjonm/QGDocs/refs/heads/main/Geo/Adjacency/NC_pct21.json -o NC_pct21.json
+```
+
+```{.julia}
+import Pkg
+Pkg.activate(".")
+using RandomNumbers
+using CycleWalk
+
+twocycle_frac = 0.1
+gamma = 0.0 # 0 is spanning forest measure, 1 is partition
+iso_weight = 0.45 # weight on the sum of isoperimetric ratios; i.e. Polsby-Popper
+num_dists = 14
+
+@assert 0 ≤ twocycle_frac ≤ 1
+
+rng = PCG.PCGStateOneseq(UInt64, 4541901234)
+pop_dev = 0.02 # population deviation (fraction from ideal)
+cycle_walk_steps = 10^3
+steps = Int(cycle_walk_steps/twocycle_frac)
+outfreq = Int(400/twocycle_frac)
+
+## build graph
+pctGraphPath = joinpath(".","NC_pct21.json")
+nodeData = Set(["county", "prec_id", "pop2020cen", "area", "border_length"]);
+graph = build_graph(pctGraphPath, "pop2020cen", "prec_id", nodeData;
+              area_col="area", node_border_col="border_length", 
+              edge_perimeter_col="length")
+
+## build partition
+constraints = initialize_constraints()
+add_constraint!(constraints, PopulationConstraint(graph, num_dists, pop_dev))
+partition = LinkCutPartition(graph, constraints, num_dists; rng=rng, 
+                             verbose=true);
+
+## build proposal
+cycle_walk_2_tree = build_two_tree_cycle_walk(constraints)
+cycle_walk_1_tree = build_one_tree_cycle_walk(constraints)
+proposal = [(twocycle_frac, cycle_walk_2_tree), 
+            (1.0-twocycle_frac, cycle_walk_1_tree)]
+
+## build measure
+measure = Measure()
+push_energy!(measure, get_log_spanning_forests, gamma) # add spanning forests energy
+push_energy!(measure, get_isoperimetric_score, iso_weight) # add isoperimetric score energy
+
+## establish output name and path
+atlasName = "cycleWalk_nc_kappa"*string(twocycle_frac)
+atlasName *= "_gamma"*string(gamma)
+atlasName *= "_iso"*string(iso_weight)
+atlasName *= ".jsonl.gz" # or just ".jsonl" for an uncompressed output
+output_file_path = joinpath("output","nc", atlasName) # add output directory to path
+
+## establish writer to which the output will be written
+ad_param = Dict{String, Any}("popdev" => pop_dev) # specific info to write
+writer = Writer(measure, constraints, partition, output_file_path; 
+                additional_parameters=ad_param)
+push_writer!(writer, get_log_spanning_trees) # add spanning trees count to writer
+push_writer!(writer, get_log_spanning_forests) # add spanning forests count to writer
+push_writer!(writer, get_isoperimetric_scores) # add isoperimetric scores to writer
+
+## run MCMC sampler
+println("running mcmc; outputting here: "* output_file_path)
+run_metropolis_hastings!(partition, proposal, measure, steps, rng,
+                         writer=writer, output_freq=outfreq)
+close_writer(writer) # close atlas
+```

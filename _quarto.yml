@@ -7,26 +7,35 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: geographic.qmd
-        text: Geographic Files
-      - href: cycleWalk.qmd
-      - href: forest_recom.qmd
-      - href: atlasIO.qmd
-        text: Atlas Files
-      - href: https://sites.duke.edu/quantifyinggerrymandering/
-        text: QG Blog  
+      - text: Sampling Code
+        menu:
+          - href: cycleWalk.qmd
+            text: Cycle Walk
+          - href: forest_recom.qmd
+            text: Metropolized Forest ReCom
+      - text: Data Files
+        menu:     
+          - href: geographic.qmd
+            text: Geographic Files
+          - href: atlasIO.qmd
+            text: Atlas Files
+      - text: Processing Code
+    right:
+      - text: QG Blog  
+        href: https://sites.duke.edu/quantifyinggerrymandering/    
       - about.qmd
   sidebar: 
     style: "docked"
     search: true
     depth: 2
     contents:
-      - text: Geographic Files
-        href: geographic.qmd  
       - text: "Cycle Walk"
         href: cycleWalk.qmd
       - text: "Metropolized Forest ReCom"
         href: forest_recom.qmd
+
+      - text: Geographic Files
+        href: geographic.qmd  
       - text: "Atlas Files"
         href: atlasIO.qmd      
 
