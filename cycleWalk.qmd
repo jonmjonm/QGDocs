@@ -392,6 +392,34 @@ We now consider a smaller but realistic example of generating district maps for 
 curl   https://raw.githubusercontent.com/jonmjonm/QGDocs/refs/heads/main/Geo/Adjacency/NC_pct21.json -o NC_pct21.json
 ```
 
+Unlike the previous example, there is a small complication with the JSON Adjacency file [Geo/Adjacency/NC_pct21.json](NC_pct21.json). There is no field that can be used for the nodes/vertices that is a string and unique. The `id` field is a unique identifier vut it is an integer. The `prec_id` field is only unique with in each county. There are several ways to remedy this. We choose to combine the `county` with the `prec_id` to create a new field called `county_and_prec_id`.
+
+Unlike the previous example, we can not load the JSON Adjacency in a single shot  to produce an adjacency graph object. First we load the file in to sample base graph.
+
+```{.julia}
+base_graph = BaseGraph(pctGraphPath, "pop2020cen", inc_node_data=nodeData,
+                       area_col="area", node_border_col="border_length",
+                       edge_perimeter_col="length", edge_weights="connections");
+```
+
+Next we loop through the nodes and create the new new field called `county_and_prec_id`.
+
+```{.julia}
+for ii = 1:length(base_graph.node_attributes)
+    county = base_graph.node_attributes[ii]["county"]
+    prec_id = base_graph.node_attributes[ii]["prec_id"]
+    name = county*"_"*prec_id
+    base_graph.node_attributes[ii]["county_and_prec_id"] = name
+end
+```
+
+Lastly we load basic graph into an adjacency graph object.
+```{.julia}
+graph = Graph(base_graph, "county_and_prec_id");    
+```
+
+We now not place this modification in the a script that is a small modification of the script we used for Connecticut.
+
 ```{.julia}
 import Pkg
 Pkg.activate(".")
@@ -427,7 +455,7 @@ for ii = 1:length(base_graph.node_attributes)
 end
 # now that the field "county_and_prec_id" is set, we can use it to create the 
 # graph object that we will sample on
-graph = Graph(base_graph, "county_and_prec_id");              
+graph = Graph(base_graph,"county_and_prec_id");              
 
 ## build partition
 constraints = initialize_constraints()
