@@ -413,10 +413,21 @@ outfreq = Int(400/twocycle_frac)
 
 ## build graph
 pctGraphPath = joinpath(".","NC_pct21.json")
-nodeData = Set(["county", "prec_id", "pop2020cen", "area", "border_length"]);
-graph = build_graph(pctGraphPath, "pop2020cen", "prec_id", nodeData;
-              area_col="area", node_border_col="border_length", 
-              edge_perimeter_col="length")
+nodeData = Set(["county","prec_id", "pop2020cen", "area", "border_length"]);
+# load in base graph
+base_graph = BaseGraph(pctGraphPath, "pop2020cen", inc_node_data=nodeData,
+                       area_col="area", node_border_col="border_length",
+                       edge_perimeter_col="length", edge_weights="connections");
+# combines county and precinct id
+for ii = 1:length(base_graph.node_attributes)
+    county = base_graph.node_attributes[ii]["county"]
+    prec_id = base_graph.node_attributes[ii]["prec_id"]
+    name = county*"_"*prec_id
+    base_graph.node_attributes[ii]["county_and_prec_id"] = name
+end
+# now that the field "county_and_prec_id" is set, we can use it to create the 
+# graph object that we will sample on
+graph = Graph(base_graph, "county_and_prec_id");              
 
 ## build partition
 constraints = initialize_constraints()
@@ -443,7 +454,7 @@ atlasName *= ".jsonl.gz" # or just ".jsonl" for an uncompressed output
 output_file_path = joinpath("output","nc", atlasName) # add output directory to path
 
 ## establish writer to which the output will be written
-ad_param = Dict{String, Any}("popdev" => pop_dev) # specific info to write
+ad_param = Dict{String, Any}("popdev" => pop_dev,"kappa"=>twocycle_frac,"iso_weight"=>iso_weight,"gamma"=>gamma) # specific info to write
 writer = Writer(measure, constraints, partition, output_file_path; 
                 additional_parameters=ad_param)
 push_writer!(writer, get_log_spanning_trees) # add spanning trees count to writer
